@@ -114,19 +114,25 @@ app.post('/api/ftp/upload-html', async (req, res) => {
 });
 
 // 이미지 프록시 (외부 URL → base64 변환, CORS 우회)
-app.get('/api/proxy-image', async (req, res) => {
+app.get('/api/proxy-image', (req, res) => {
   const url = req.query.url;
   if (!url) return res.status(400).json({ ok: false, message: 'url 파라미터가 없습니다.' });
-  try {
-    const resp = await fetch(url);
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    const contentType = resp.headers.get('content-type') || 'image/png';
-    const buffer = Buffer.from(await resp.arrayBuffer());
-    const base64 = 'data:' + contentType + ';base64,' + buffer.toString('base64');
-    res.json({ ok: true, dataUrl: base64 });
-  } catch (e) {
+  const lib = url.startsWith('https') ? require('https') : require('http');
+  lib.get(url, (proxyRes) => {
+    if (proxyRes.statusCode !== 200) {
+      return res.status(500).json({ ok: false, message: 'HTTP ' + proxyRes.statusCode });
+    }
+    const contentType = proxyRes.headers['content-type'] || 'image/jpeg';
+    const chunks = [];
+    proxyRes.on('data', c => chunks.push(c));
+    proxyRes.on('end', () => {
+      const buffer = Buffer.concat(chunks);
+      const base64 = 'data:' + contentType + ';base64,' + buffer.toString('base64');
+      res.json({ ok: true, dataUrl: base64 });
+    });
+  }).on('error', (e) => {
     res.status(500).json({ ok: false, message: e.message });
-  }
+  });
 });
 
 const PORT = 3900;

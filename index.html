@@ -141,6 +141,12 @@
       border-color: rgba(99,102,241,0.20);
       box-shadow: 0 2px 8px rgba(99,102,241,0.10);
     }
+    .hs-item.active {
+      background: rgba(99,102,241,0.13);
+      border-color: rgba(99,102,241,0.45);
+      box-shadow: 0 0 0 2px rgba(99,102,241,0.18);
+    }
+    .hs-item.active .hs-item-name { color: #4f46e5; }
     .hs-item-name { font-size: 12px; font-weight: 600; color: #1f2937; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .hs-item-meta { display: flex; align-items: center; gap: 6px; font-size: 10px; color: #9ca3af; }
     .hs-source-tag {
@@ -171,6 +177,8 @@
     }
     .edit-mode-active #stage { padding-top: 76px; }
     .edit-mode-active #deploy-btn { opacity: 0.35; pointer-events: none; }
+    .edit-mode-active .view-only { display: none !important; }
+    body.template-mode-active .view-only { display: none !important; }
     /* ── Bookmark Tab (뉴스레터 우측 바깥 가로 책갈피) ── */
     #canvas-label {
       --cl-accent: 99,102,241;
@@ -1232,6 +1240,9 @@
     body.template-mode-active #template-wrap { display: block !important; }
     body.template-mode-active #template-label { display: flex !important; }
     body.template-mode-active .editor-only { display: none !important; }
+    body.template-mode-active #og-panel { display: none !important; }
+    body.template-mode-active #toolbar > *:not(.tpl-only) { display: none !important; }
+    body.template-mode-active #edit-top-bar { display: none !important; }
     body.template-mode-active .tpl-only { display: flex !important; }
 
     /* 에디터 모드에서 템플릿 보관함 토글 */
@@ -1422,6 +1433,8 @@
   <button class="tbtn tbtn-ghost editor-only" id="tpl-mode-btn" data-tooltip="템플릿 제작" onclick="enterTemplateMode()"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M17 14v7m-3.5-3.5h7"/></svg></button>
   <button class="tbtn tbtn-ghost editor-only" id="undo-btn" data-tooltip="되돌리기" onclick="undoLast()" disabled><svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></button>
   <div class="sidebar-divider editor-only"></div>
+  <button class="tbtn tbtn-ghost view-only" id="ai-alt-btn" data-tooltip="AI Alt 생성" onclick="generateAltTexts()"><svg viewBox="0 0 24 24"><path d="M12 2l2.09 6.26L20.18 10l-6.09 1.74L12 18l-2.09-6.26L3.82 10l6.09-1.74L12 2z"/><path d="M19 15l1.04 3.13L23.18 19l-3.14.87L19 23l-1.04-3.13L14.82 19l3.14-.87L19 15z" opacity=".6"/></svg></button>
+  <div class="sidebar-divider view-only"></div>
   <button class="tbtn tbtn-primary" id="deploy-btn" data-tooltip="배포하기" onclick="deployNewsletter()"><svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg></button>
   <!-- 템플릿 모드 버튼 -->
   <button class="tbtn tbtn-ghost tpl-only" id="tpl-back-btn" data-tooltip="뒤로" onclick="exitTemplateMode()" style="display:none"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
@@ -1863,6 +1876,7 @@ const IC = {
   divider:  '<svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/></svg>',
   back:     '<svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
   template: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M17 14v7m-3.5-3.5h7"/></svg>',
+  ai:       '<svg viewBox="0 0 24 24"><path d="M12 2l2.09 6.26L20.18 10l-6.09 1.74L12 18l-2.09-6.26L3.82 10l6.09-1.74L12 2z"/><path d="M19 15l1.04 3.13L23.18 19l-3.14.87L19 23l-1.04-3.13L14.82 19l3.14-.87L19 15z" opacity=".6"/></svg>',
 };
 
 // ── State ────────────────────────────────────────────────────
@@ -1881,9 +1895,12 @@ const _TYPE_LABELS = { pentaprism: '펜타프리즘', shout: '샤우트', blueho
 const _TYPE_UPPERS = { pentaprism: 'PENTAPRISM', shout: 'SHOUT', bluehole: 'BLUEHALL MEETING' };
 
 function _updateTopBar(source, issueData) {
+  const prevSource = _currentSourceName;
   _currentSourceName = source || 'pentaprism';
   const el = document.getElementById('canvas-type-label');
   if (el) el.textContent = _TYPE_UPPERS[_currentSourceName] || 'PENTAPRISM';
+  // 소스 변경 시 템플릿 목록 갱신
+  if (prevSource !== _currentSourceName) renderTemplateLibrary();
 
   const canvasLabel = document.getElementById('canvas-label');
   const editBar = document.getElementById('edit-top-bar');
@@ -2110,6 +2127,7 @@ async function saveToHistory(name, overwriteId) {
   try {
     await _histDB.put(item);
     await _histDB.trim(HIST_SIDEBAR_MAX);
+    _loadedHistoryId = item.id;
     await renderHistoryList();
     document.getElementById('deploy-btn').disabled = false;
     showToast('히스토리에 저장되었습니다');
@@ -2141,45 +2159,60 @@ async function _findExistingHistory(source, issueKey) {
 
 async function deleteHistoryItem(id) {
   try {
+    // 현재 뷰모드로 보고 있는 히스토리를 삭제하면 다음 항목 자동 로드
+    let nextItem = null;
+    if (!editMode && _loadedHistoryId === id) {
+      const list = await _histDB.getAll();
+      const idx = list.findIndex(h => h.id === id);
+      if (idx !== -1 && idx + 1 < list.length) {
+        nextItem = list[idx + 1];
+      }
+    }
     await _histDB.del(id);
     await renderHistoryList();
+    if (nextItem) {
+      loadFromHistory(nextItem);
+    }
   } catch (e) { console.error('History delete failed:', e); }
 }
 
 function loadFromHistory(item) {
-  showConfirmModal(
-    '현재 편집 중인 내용이 히스토리로 대체됩니다.\n계속하시겠습니까?',
-    () => {
-      if (editMode) setEditMode(false);
-      _updateTopBar(item.source, item.issueData != null ? item.issueData : (item.issueNumber || ''));
-      const wrap = document.getElementById('newsletter-wrap');
-      wrap.innerHTML = item.html;
-      wrapImages();
-      wrapTextTDs();
-      setupLayoutButtons();
-      if (item.footerDate) {
-        const fy = document.getElementById('fd-year');
-        const fm = document.getElementById('fd-month');
-        const fd = document.getElementById('fd-day');
-        if (fy && item.footerDate.year) fy.value = item.footerDate.year;
-        if (fm && item.footerDate.month) fm.value = item.footerDate.month;
-        if (fd && item.footerDate.day) fd.value = item.footerDate.day;
-      }
-      // OG 데이터 복원
-      if (item.og) {
-        _ogData = { title: '', description: '', imageDataUrl: '', url: 'https://shout.co.kr/', ...item.og };
-      } else {
-        _ogData = { title: '', description: '', imageDataUrl: '', url: 'https://shout.co.kr/' };
-      }
-      _renderOgPanel();
-      _loadedHistoryId = item.id;   // 불러온 히스토리 항목 ID 기억
-      document.getElementById('deploy-btn').disabled = false;
-      _saveDraft();
-      if (editMode) setEditMode(false);
-      setTimeout(_positionBookmark, 50);
-      showToast('"' + item.name + '" 불러오기 완료');
+  function doLoad() {
+    if (editMode) setEditMode(false);
+    _updateTopBar(item.source, item.issueData != null ? item.issueData : (item.issueNumber || ''));
+    const wrap = document.getElementById('newsletter-wrap');
+    wrap.innerHTML = item.html;
+    wrapImages();
+    wrapTextTDs();
+    setupLayoutButtons();
+    if (item.footerDate) {
+      const fy = document.getElementById('fd-year');
+      const fm = document.getElementById('fd-month');
+      const fd = document.getElementById('fd-day');
+      if (fy && item.footerDate.year) fy.value = item.footerDate.year;
+      if (fm && item.footerDate.month) fm.value = item.footerDate.month;
+      if (fd && item.footerDate.day) fd.value = item.footerDate.day;
     }
-  );
+    // OG 데이터 복원
+    if (item.og) {
+      _ogData = { title: '', description: '', imageDataUrl: '', url: 'https://shout.co.kr/', ...item.og };
+    } else {
+      _ogData = { title: '', description: '', imageDataUrl: '', url: 'https://shout.co.kr/' };
+    }
+    _renderOgPanel();
+    _loadedHistoryId = item.id;   // 불러온 히스토리 항목 ID 기억
+    document.getElementById('deploy-btn').disabled = false;
+    _saveDraft();
+    if (editMode) setEditMode(false);
+    setTimeout(_positionBookmark, 50);
+    renderHistoryList();
+    showToast('"' + item.name + '" 불러오기 완료');
+  }
+  if (editMode) {
+    showConfirmModal('현재 편집 중인 내용이 히스토리로 대체됩니다.\n계속하시겠습니까?', doLoad);
+  } else {
+    doLoad();
+  }
 }
 
 async function renderHistoryList() {
@@ -2200,7 +2233,7 @@ async function renderHistoryList() {
     const d = new Date(item.savedAt);
     const dateStr = d.getFullYear() + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + String(d.getDate()).padStart(2, '0') + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
     const div = document.createElement('div');
-    div.className = 'hs-item';
+    div.className = 'hs-item' + (_loadedHistoryId === item.id ? ' active' : '');
     div.innerHTML =
       '<div class="hs-item-name">' + _escHtml(item.name) + '</div>' +
       '<div class="hs-item-meta">' +
@@ -2543,29 +2576,36 @@ function _saveTemplatesLocal(arr) {
 }
 
 function _toTplRow(t) {
-  return { id: t.id, name: t.name, html: t.html, created_at: t.createdAt, updated_at: t.updatedAt };
+  return { id: t.id, name: t.name, html: t.html, source: t.source || 'pentaprism', created_at: t.createdAt, updated_at: t.updatedAt };
 }
 function _fromTplRow(r) {
-  return { id: r.id, name: r.name, html: r.html, createdAt: r.created_at, updatedAt: r.updated_at };
+  return { id: r.id, name: r.name, html: r.html, source: r.source || 'pentaprism', createdAt: r.created_at, updatedAt: r.updated_at };
 }
 
 async function _loadTemplates() {
+  const src = _currentSourceName || 'pentaprism';
+  const filterBySource = list => list.filter(t => (t.source || 'pentaprism') === src);
   const sb = _getSb();
-  if (!sb) return _loadTemplatesLocal();
+  if (!sb) return filterBySource(_loadTemplatesLocal());
   try {
-    const { data, error } = await sb.from('templates').select('*').order('created_at', { ascending: false });
-    if (error) throw error;
-    return (data || []).map(_fromTplRow);
+    // source 컬럼 필터 시도, 실패 시 전체 로드 후 클라이언트 필터링
+    let res = await sb.from('templates').select('*').eq('source', src).order('created_at', { ascending: false });
+    if (res.error) {
+      res = await sb.from('templates').select('*').order('created_at', { ascending: false });
+      if (res.error) throw res.error;
+      return filterBySource((res.data || []).map(_fromTplRow));
+    }
+    return (res.data || []).map(_fromTplRow);
   } catch (e) {
     console.error('Supabase templates load failed, falling back:', e);
-    return _loadTemplatesLocal();
+    return filterBySource(_loadTemplatesLocal());
   }
 }
 
 async function addTemplate(name, html) {
   const id = 'tpl-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
   const now = new Date().toISOString();
-  const tpl = { id, name, html, createdAt: now, updatedAt: now };
+  const tpl = { id, name, html, source: _currentSourceName || 'pentaprism', createdAt: now, updatedAt: now };
   const arr = _loadTemplatesLocal();
   arr.push(tpl);
   _saveTemplatesLocal(arr);
@@ -2680,15 +2720,24 @@ const _SHOUT_INITIAL_HTML = `
     <table width="720" align="center" style="margin: 0px; padding: 0px; border: currentColor; border-image: none; font-size: 0px;" border="0" cellspacing="0" cellpadding="0">
         <tbody>
             <tr>
+                <td height="30"></td>
+            </tr>
+            <tr>
                 <td>
                     <table cellpadding="0" cellspacing="0" style="width:100%; padding:0; margin:0; font-size:0;" data-shout-header>
                         <tbody>
                             <tr>
-                                <td width="720" valign="top" colspan="4">
+                                <td width="720" valign="top" colspan="3">
                                     <img style="vertical-align: top; display: block;" alt="" src="" border="0">
                                 </td>
                             </tr>
-                            <tr><td height="2" valign="top" colspan="4"></td></tr>
+                            <tr><td height="2" valign="top" colspan="3"></td></tr>
+                            <tr>
+                                <td width="720" valign="top" colspan="3">
+                                    <img style="vertical-align: top; display: block;" alt="" src="" border="0">
+                                </td>
+                            </tr>
+                            <tr><td height="2" valign="top" colspan="3"></td></tr>
                             <tr>
                                 <td valign="top" width="359" style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
                                     <img style="vertical-align: top; display: block; width:100%;" alt="" src="" border="0">
@@ -2706,36 +2755,42 @@ const _SHOUT_INITIAL_HTML = `
                 <td>
                     <table cellpadding="0" cellspacing="0" style="width:100%; padding:0; margin:0; font-size:0;">
                         <tbody>
-                            <tr><td height="60" colspan="3"></td></tr>
+                            <tr><td colspan="3" height="60"></td></tr>
                             <tr>
                                 <td width="65"></td>
-                                <td width="590" align="center">
-                                    <img style="vertical-align: top; display: block;" alt="" src="" border="0">
+                                <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img src="" alt="" style="border:0;width:100%;display:block;" />
                                 </td>
                                 <td width="65"></td>
                             </tr>
                             <tr>
                                 <td width="65"></td>
-                                <td width="590">
-                                    <img style="vertical-align: top; padding-bottom: 10px;" alt="" src="" border="0">
+                                <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img src="" alt="" style="border:0;width:100%;display:block;" />
                                 </td>
                                 <td width="65"></td>
                             </tr>
                             <tr><td colspan="3" height="10"></td></tr>
                             <tr>
                                 <td width="65"></td>
-                                <td class="te-td" style='color: #575756; line-height: 20px; letter-spacing: -1px; font-family: "Malgun Gothic", sans-serif; font-size: 13px; vertical-align: top; width: 590px;'>텍스트를 입력하세요.</td>
+                                <td style="color: #575756; line-height: 20px; letter-spacing: -1px; font-family: 'Malgun Gothic', sans-serif; font-size: 13px; vertical-align: top;">
+                                    텍스트를 입력하세요.
+                                </td>
                                 <td width="65"></td>
                             </tr>
-                            <tr><td height="50" colspan="3"></td></tr>
-                            <tr>
-                                <td colspan="3" align="center"><img style="vertical-align: top;" alt="Continue" src="https://pentapost.net/newsletter/images/482/con_btn.jpg" border="0"></td>
-                            </tr>
-                            <tr><td height="50" colspan="3"></td></tr>
+                            <tr><td colspan="3" height="50"></td></tr>
                             <tr>
                                 <td width="65"></td>
-                                <td width="590">
-                                    <img style="vertical-align: top; display: block;" alt="" src="" border="0">
+                                <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;text-align:center;">
+                                    <img src="https://pentapost.net/newsletter/images/482/con_btn.jpg" alt="Continue" style="border:0;" />
+                                </td>
+                                <td width="65"></td>
+                            </tr>
+                            <tr><td colspan="3" height="50"></td></tr>
+                            <tr>
+                                <td width="65"></td>
+                                <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img src="" alt="" style="border:0;width:100%;display:block;" />
                                 </td>
                                 <td width="65"></td>
                             </tr>
@@ -2747,36 +2802,42 @@ const _SHOUT_INITIAL_HTML = `
                 <td>
                     <table cellpadding="0" cellspacing="0" style="width:100%; padding:0; margin:0; font-size:0;">
                         <tbody>
-                            <tr><td height="60" colspan="3"></td></tr>
+                            <tr><td colspan="3" height="60"></td></tr>
                             <tr>
                                 <td width="65"></td>
-                                <td width="590" align="center">
-                                    <img style="vertical-align: top; display: block;" alt="" src="" border="0">
+                                <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img src="" alt="" style="border:0;width:100%;display:block;" />
                                 </td>
                                 <td width="65"></td>
                             </tr>
                             <tr>
                                 <td width="65"></td>
-                                <td width="590">
-                                    <img style="vertical-align: top; padding-bottom: 10px;" alt="" src="" border="0">
+                                <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img src="" alt="" style="border:0;width:100%;display:block;" />
                                 </td>
                                 <td width="65"></td>
                             </tr>
                             <tr><td colspan="3" height="10"></td></tr>
                             <tr>
                                 <td width="65"></td>
-                                <td class="te-td" style='color: #575756; line-height: 20px; letter-spacing: -1px; font-family: "Malgun Gothic", sans-serif; font-size: 13px; vertical-align: top; width: 590px;'>텍스트를 입력하세요.</td>
+                                <td style="color: #575756; line-height: 20px; letter-spacing: -1px; font-family: 'Malgun Gothic', sans-serif; font-size: 13px; vertical-align: top;">
+                                    텍스트를 입력하세요.
+                                </td>
                                 <td width="65"></td>
                             </tr>
-                            <tr><td height="50" colspan="3"></td></tr>
-                            <tr>
-                                <td colspan="3" align="center"><img style="vertical-align: top;" alt="Continue" src="https://pentapost.net/newsletter/images/482/con_btn.jpg" border="0"></td>
-                            </tr>
-                            <tr><td height="50" colspan="3"></td></tr>
+                            <tr><td colspan="3" height="50"></td></tr>
                             <tr>
                                 <td width="65"></td>
-                                <td width="590">
-                                    <img style="vertical-align: top; display: block;" alt="" src="" border="0">
+                                <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;text-align:center;">
+                                    <img src="https://pentapost.net/newsletter/images/482/con_btn.jpg" alt="Continue" style="border:0;" />
+                                </td>
+                                <td width="65"></td>
+                            </tr>
+                            <tr><td colspan="3" height="50"></td></tr>
+                            <tr>
+                                <td width="65"></td>
+                                <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img src="" alt="" style="border:0;width:100%;display:block;" />
                                 </td>
                                 <td width="65"></td>
                             </tr>
@@ -2788,84 +2849,97 @@ const _SHOUT_INITIAL_HTML = `
                 <td>
                     <table cellpadding="0" cellspacing="0" style="width:100%; padding:0; margin:0; font-size:0;">
                         <tbody>
-                            <tr><td height="60" colspan="3"></td></tr>
+                            <tr><td colspan="3" height="60"></td></tr>
                             <tr>
                                 <td width="65"></td>
-                                <td width="590" align="center">
-                                    <img style="vertical-align: top; display: block;" alt="" src="" border="0">
+                                <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img src="" alt="" style="border:0;width:100%;display:block;" />
                                 </td>
                                 <td width="65"></td>
                             </tr>
                             <tr>
                                 <td width="65"></td>
-                                <td width="590">
-                                    <img style="vertical-align: top; padding-bottom: 10px;" alt="" src="" border="0">
+                                <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img src="" alt="" style="border:0;width:100%;display:block;" />
                                 </td>
                                 <td width="65"></td>
                             </tr>
                             <tr><td colspan="3" height="10"></td></tr>
                             <tr>
                                 <td width="65"></td>
-                                <td class="te-td" style='color: #575756; line-height: 20px; letter-spacing: -1px; font-family: "Malgun Gothic", sans-serif; font-size: 13px; vertical-align: top; width: 590px;'>텍스트를 입력하세요.</td>
-                                <td width="65"></td>
-                            </tr>
-                            <tr><td height="50" colspan="3"></td></tr>
-                            <tr>
-                                <td colspan="3" align="center"><img style="vertical-align: top;" alt="Continue" src="https://pentapost.net/newsletter/images/482/con_btn.jpg" border="0"></td>
-                            </tr>
-                            <tr><td height="50" colspan="3"></td></tr>
-                            <tr>
-                                <td width="65"></td>
-                                <td width="590">
-                                    <img style="vertical-align: top; display: block;" alt="" src="" border="0">
+                                <td style="color: #575756; line-height: 20px; letter-spacing: -1px; font-family: 'Malgun Gothic', sans-serif; font-size: 13px; vertical-align: top;">
+                                    텍스트를 입력하세요.
                                 </td>
                                 <td width="65"></td>
                             </tr>
+                            <tr><td colspan="3" height="50"></td></tr>
+                            <tr>
+                                <td width="65"></td>
+                                <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;text-align:center;">
+                                    <img src="https://pentapost.net/newsletter/images/482/con_btn.jpg" alt="Continue" style="border:0;" />
+                                </td>
+                                <td width="65"></td>
+                            </tr>
+                            <tr><td colspan="3" height="50"></td></tr>
+                            <tr>
+                                <td width="65"></td>
+                                <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img src="" alt="" style="border:0;width:100%;display:block;" />
+                                </td>
+                                <td width="65"></td>
+                            </tr>
+                            <tr><td colspan="3" height="30"></td></tr>
                         </tbody>
                     </table>
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <table cellpadding="0" cellspacing="0" style="width:100%; padding:0; margin:0; font-size:0;">
-                        <tbody>
-                            <tr><td height="30" colspan="3"></td></tr>
-                            <tr>
-                                <td width="65"></td>
-                                <td width="590" align="center" valign="top">
-                                    <img style="border: 0px; vertical-align: top; display: block;" alt="펜타포스트" src="https://pentapost.net/newsletter/images/482/footer_address.jpg" border="0">
-                                </td>
-                                <td width="65"></td>
-                            </tr>
-                            <tr><td height="10" colspan="3"></td></tr>
-                            <tr>
-                                <td width="65"></td>
-                                <td height="1" style="height: 1px; line-height: 1px; font-size: 0px;" bgcolor="#e5e5e5"></td>
-                                <td width="65"></td>
-                            </tr>
-                            <tr><td height="30" colspan="3"></td></tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
+            <!-- ── Footer: 주소 ── -->
             <tr>
                 <td>
                     <table cellpadding="0" cellspacing="0" style="width:100%; padding:0; margin:0; font-size:0;">
                         <tbody>
                             <tr>
                                 <td width="65"></td>
-                                <td width="165" valign="top">
-                                    <img style="border: 0px; vertical-align: top; display: block;" alt="샤우트" src="https://pentapost.net/newsletter/images/568/footer_shout.jpg" border="0">
+                                <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img src="https://pentapost.net/newsletter/images/482/footer_address.jpg" alt="펜타포스트 서울시 서초구 서운로26길 9 펜타타워 Tel _ 02 6911 5555 Fax _ 02 6528 2528 www.pentabreed.com" style="border:0;width:100%;display:block;" />
                                 </td>
-                                <td width="425" valign="top" style='font-family: "Malgun Gothic",sans-serif; font-size: 12px; vertical-align: top;'>
-                                    <p style="margin: 0px; text-align: left; color: #898b8e; line-height: 17px; font-size: 12px; letter-spacing: -0.5px;">
-                                        본 메일은 <span class="footer-date-text" id="footer-date-text"></span><span class="footer-date-picker" id="footer-date-picker"><select id="fd-year"></select><span>년</span><select id="fd-month"></select><span>월</span><select id="fd-day"></select><span>일기준,</span></span> SHOUT 수신에 동의하신 분들께 발송됩니다.<br />메일수신을 원하지
-                                        않으신다면, <span style="color: rgb(0, 186, 210);">[수신거부]</span>를 클릭해주시기 바랍니다.
+                                <td width="65"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" height="10"></td>
+                            </tr>
+                            <tr>
+                                <td width="65"></td>
+                                <td height="1" style="height:1px;line-height:1px;font-size:0;background-color:#e5e5e5;"></td>
+                                <td width="65"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" height="30"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <!-- ── Footer: 로고 + 수신거부 ── -->
+            <tr>
+                <td>
+                    <table cellpadding="0" cellspacing="0" style="width:100%; padding:0; margin:0; font-size:0;">
+                        <tbody>
+                            <tr>
+                                <td width="65"></td>
+                                <td width="165" style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img src="https://pentapost.net/newsletter/images/568/footer_shout.jpg" alt="샤우트" style="border:0;display:block;" />
+                                </td>
+                                <td style="font-family:'Malgun Gothic',sans-serif; font-size:12px; vertical-align:top;">
+                                    <p style="margin:0; text-align:left; color:#898b8e; line-height:17px; font-size:12px; letter-spacing:-0.5px;">
+                                        본 메일은 <span class="footer-date-text" id="footer-date-text"></span><span class="footer-date-picker" id="footer-date-picker"><select id="fd-year"></select><span>년</span><select id="fd-month"></select><span>월</span><select id="fd-day"></select><span>일 기준,</span></span> SHOUT 수신에 동의하신 분들께 발송됩니다.<br/>메일수신을 원하지 않으신다면, <span style="color:#00bad2;">[수신거부]</span>를 클릭해주시기 바랍니다.
                                     </p>
                                 </td>
                                 <td width="65"></td>
                             </tr>
-                            <tr><td height="30" colspan="4"></td></tr>
+                            <tr>
+                                <td colspan="4" height="30"></td>
+                            </tr>
                         </tbody>
                     </table>
                 </td>
@@ -2923,7 +2997,7 @@ async function _runMigrationIfNeeded() {
         }
       } catch {}
       for (const folder of localFolders) {
-        await sb.from('image_folders').upsert({ id: folder.id, name: folder.name, created_at: folder.createdAt });
+        await sb.from('image_folders').upsert({ id: folder.id, name: folder.name, created_at: folder.createdAt, source: folder.source || 'pentaprism', issue_key: folder.issueKey || '' });
         for (const img of folder.images) {
           if (!img.dataUrl || !img.dataUrl.startsWith('data:')) continue;
           try {
@@ -2950,31 +3024,178 @@ async function _runMigrationIfNeeded() {
   }
 }
 
+// ── AI Alt Text Generation (Gemini Vision) ──────────────────
+const _GEMINI_KEY = 'AIzaSyDwbDKipeAjwgTbpz08-2ZZrnfs0SSNV-Y';
+const _GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + _GEMINI_KEY;
+
+async function generateAltTexts() {
+  const wrap = document.getElementById('newsletter-wrap');
+  if (!wrap) return;
+
+  const imgs = Array.from(wrap.querySelectorAll('img')).filter(img => {
+    const src = img.src || '';
+    if (!src || src.startsWith('data:')) return false;
+    const w = img.naturalWidth || img.width || parseInt(img.getAttribute('width')) || 999;
+    const h = img.naturalHeight || img.height || parseInt(img.getAttribute('height')) || 999;
+    if (w <= 10 || h <= 10) return false;
+    return true;
+  });
+
+  if (imgs.length === 0) {
+    showToast('이미지가 없습니다');
+    return;
+  }
+
+  const btn = document.getElementById('ai-alt-btn');
+  btn.disabled = true;
+  btn.dataset.tooltip = '생성 중...';
+  showToast(`${imgs.length}개 이미지 분석 중...`);
+
+  // Convert images to base64 (use CORS proxy for cross-origin images)
+  const imgList = [];
+  for (const img of imgs) {
+    const src = img.src || '';
+    if (!src.startsWith('http')) continue;
+    const b64 = await _imgToBase64(src);
+    if (b64) imgList.push({ el: img, ...b64 });
+  }
+
+  if (imgList.length === 0) {
+    btn.disabled = false;
+    btn.dataset.tooltip = 'AI Alt 생성';
+    showToast('이미지를 불러올 수 없습니다');
+    return;
+  }
+
+  showToast(`${imgList.length}개 이미지 AI 분석 요청 중...`);
+
+  // Build single API request with all images as inline base64
+  const parts = [
+    { text: `이메일 뉴스레터에 사용되는 이미지 ${imgList.length}개입니다. 각 이미지에 대해 간결한 한국어 alt 텍스트를 작성해주세요. 20자 이내로 작성하고, 반드시 아래 형식으로만 출력하세요:\n1: alt텍스트\n2: alt텍스트\n...\n다른 설명은 하지 마세요.\n장식용 이미지, 구분선, 단색 배경, 로고, 버튼 등 의미 있는 내용이 없는 이미지는 빈칸으로 작성하세요. 예: 3: ` }
+  ];
+  imgList.forEach(d => {
+    parts.push({ inline_data: { mime_type: d.mime, data: d.data } });
+  });
+
+  try {
+    const reqBody = JSON.stringify({ contents: [{ parts }] });
+    let resp, maxRetries = 5;
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      resp = await fetch(_GEMINI_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: reqBody
+      });
+      if (resp.status !== 429) break;
+      const wait = (attempt + 1) * 30;
+      showToast(`요청 제한 초과, ${wait}초 후 재시도... (${attempt + 1}/${maxRetries})`);
+      await new Promise(r => setTimeout(r, wait * 1000));
+    }
+
+    if (!resp.ok) {
+      console.warn('Gemini API error:', resp.status);
+      showToast('AI 요청 실패 (코드: ' + resp.status + ')');
+      btn.disabled = false;
+      btn.dataset.tooltip = 'AI Alt 생성';
+      return;
+    }
+
+    const json = await resp.json();
+    const text = json?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const lines = text.trim().split('\n');
+    let successCount = 0;
+
+    lines.forEach(line => {
+      const m = line.match(/^(\d+)\s*[:：]\s*(.*)/);
+      if (!m) return;
+      const idx = parseInt(m[1]) - 1;
+      const raw = (m[2] || '').trim().replace(/^["']|["']$/g, '');
+      const alt = raw || ' ';
+      if (idx >= 0 && idx < imgList.length) {
+        imgList[idx].el.setAttribute('alt', alt);
+        successCount++;
+      }
+    });
+
+    showToast(`${successCount}/${imgList.length}개 이미지에 Alt 텍스트 적용 완료`);
+  } catch (e) {
+    console.error('Alt generation error:', e);
+    showToast('AI Alt 생성 중 오류 발생');
+  }
+
+  btn.disabled = false;
+  btn.dataset.tooltip = 'AI Alt 생성';
+}
+
+async function _imgToBase64(url) {
+  try {
+    const resp = await fetch('/api/proxy-image?url=' + encodeURIComponent(url));
+    if (resp.ok) {
+      const json = await resp.json();
+      if (json.ok && json.dataUrl) {
+        const [header, data] = json.dataUrl.split(',');
+        const mime = header.match(/data:(.+);/)?.[1] || 'image/jpeg';
+        return { data, mime };
+      }
+    }
+  } catch {}
+  return null;
+}
+
 // ── Init ─────────────────────────────────────────────────────
 (async function init() {
   await _runMigrationIfNeeded();
-  const draft = await _loadDraft();
-  if (draft) {
-    const wrap = document.getElementById('newsletter-wrap');
-    const inner = wrap.querySelector(':scope > div');
-    if (inner) {
-      wrap.innerHTML = draft.html;
+
+  // 가장 최근 히스토리 항목을 우선 로드
+  let histItems = [];
+  try { histItems = await _histDB.getAll(); } catch (e) { console.error(e); }
+  const latestHist = histItems.length > 0 ? histItems[0] : null;
+
+  let loaded = null; // { source, issueData, html, footerDate, og, historyId }
+
+  if (latestHist) {
+    // 히스토리에서 최신 항목 로드
+    loaded = {
+      source: latestHist.source,
+      issueData: latestHist.issueData != null ? latestHist.issueData : (latestHist.issueNumber || ''),
+      html: latestHist.html,
+      footerDate: latestHist.footerDate,
+      og: latestHist.og,
+      historyId: latestHist.id
+    };
+  } else {
+    // 히스토리 없으면 드래프트 폴백
+    const draft = await _loadDraft();
+    if (draft) {
+      const savedIssue = draft.issueData != null ? draft.issueData : (draft.issueNumber || '');
+      loaded = {
+        source: draft.source,
+        issueData: typeof savedIssue === 'object' && savedIssue.key !== undefined
+          ? (draft.source === 'bluehole' ? { year: savedIssue.year, month: savedIssue.month } : savedIssue.number || '')
+          : savedIssue,
+        html: draft.html,
+        footerDate: draft.footerDate,
+        og: draft.og,
+        historyId: null
+      };
     }
-    // issueData 복원: 새 형식(issueData 객체) 또는 구 형식(issueNumber 문자열)
-    const savedIssue = draft.issueData != null ? draft.issueData : (draft.issueNumber || '');
-    _updateTopBar(draft.source, typeof savedIssue === 'object' && savedIssue.key !== undefined
-      ? (draft.source === 'bluehole' ? { year: savedIssue.year, month: savedIssue.month } : savedIssue.number || '')
-      : savedIssue);
   }
-  // OG 데이터 복원
-  if (draft && draft.og) {
-    _ogData = { ..._ogData, ...draft.og };
+
+  if (loaded) {
+    const wrap = document.getElementById('newsletter-wrap');
+    wrap.innerHTML = loaded.html;
+    _updateTopBar(loaded.source, loaded.issueData);
+    if (loaded.og) _ogData = { ..._ogData, ...loaded.og };
+    if (loaded.historyId) {
+      _loadedHistoryId = loaded.historyId;
+      document.getElementById('deploy-btn').disabled = false;
+    }
   }
   _renderOgPanel();
 
   initFooterDate();
-  if (draft && draft.footerDate) {
-    const { year, month, day } = draft.footerDate;
+  if (loaded && loaded.footerDate) {
+    const { year, month, day } = loaded.footerDate;
     const ySel = document.getElementById('fd-year');
     const mSel = document.getElementById('fd-month');
     const dSel = document.getElementById('fd-day');
@@ -3505,6 +3726,9 @@ function setEditMode(on) {
     rebuildInsertZones();
     if (window._imageLibrary) window._imageLibrary.resetToFolderList();
     _initOgEditing();
+    // 편집 시작 → 히스토리 active 해제
+    _loadedHistoryId = null;
+    renderHistoryList();
   } else {
     wrap.classList.remove('edit-mode');
     document.body.classList.remove('edit-mode-active');
@@ -3569,7 +3793,6 @@ async function _finishEditAndAskHistory() {
       async () => {
         _exitToViewMode();
         await saveToHistory(histName, overwriteTarget.id);
-        _loadedHistoryId = null;
         _dismissSidebar();
       },
       () => {
@@ -3580,7 +3803,6 @@ async function _finishEditAndAskHistory() {
     // 중복 없음 → 바로 뷰 모드 전환 후 저장
     _exitToViewMode();
     await saveToHistory(histName);
-    _loadedHistoryId = null;
     _dismissSidebar();
   }
 }
@@ -3612,7 +3834,7 @@ function toggleNewPopup() {
 function startNewNewsletter(type) {
   _closeEditPopup();
   const label = _TYPE_LABELS[type] || '펜타프리즘';
-  showConfirmModal('현재 편집 내용이 초기화됩니다.\n계속하시겠습니까?', () => {
+  const doStart = () => {
     if (editMode) setEditMode(false);
     _loadedHistoryId = null;      // 새 뉴스레터 → 히스토리 추적 초기화
     _ogData = { title: '', description: '', imageDataUrl: '', url: 'https://shout.co.kr/' };
@@ -3628,7 +3850,12 @@ function startNewNewsletter(type) {
     _saveDraft();
     setEditMode(true);
     showToast(label + ' 뉴스레터가 생성되었습니다');
-  });
+  };
+  if (editMode) {
+    showConfirmModal('현재 편집 내용이 초기화됩니다.\n계속하시겠습니까?', doStart);
+  } else {
+    doStart();
+  }
 }
 
 function toggleEdit() {
@@ -4162,125 +4389,149 @@ function _getBannerRows(container) {
 
 function _setupShoutLayoutButton() {
   const root = document.getElementById('newsletter-wrap');
-  root.querySelectorAll('.shout-layout-btn').forEach(el => el.remove());
+  root.querySelectorAll('.layout-toggle-btn').forEach(el => el.remove());
   const headerTable = root.querySelector('table[data-shout-header]');
   if (!headerTable) return;
   const tbody = headerTable.querySelector('tbody');
   if (!tbody) return;
 
-  // 현재 하단 행의 이미지 수로 현재 레이아웃 판별
-  const rows = Array.from(tbody.querySelectorAll('tr'));
-  const bottomRow = rows.find(tr => {
-    const imgs = tr.querySelectorAll('img, .ie-wrap');
-    return imgs.length >= 2;
+  // 간격행(height="2") 제외한 이미지 행 찾기
+  const imgRows = Array.from(tbody.querySelectorAll('tr')).filter(tr => {
+    const td = tr.querySelector('td');
+    return td && td.getAttribute('height') !== '2';
   });
-  const curCount = bottomRow ? bottomRow.querySelectorAll('img, .ie-wrap').length : 2;
-  const is4 = curCount >= 4;
+  if (imgRows.length < 3) return;
+
+  // Row 2 (2번째 이미지 행)의 td 수로 현재 레이아웃 판별
+  const row2 = imgRows[1];
+  const row2Tds = Array.from(row2.querySelectorAll('td')).filter(td => {
+    const w = td.getAttribute('width');
+    return w && w !== '2'; // 간격 td 제외
+  });
+  const isSplit = row2Tds.length >= 2; // 2분할이면 td 2개, 풀너비면 colspan td 1개
+  const activeIdx = isSplit ? 1 : 0;
+
+  // 펜타프리즘과 동일한 UI 구성
+  let pickerHTML = '<div class="layout-toggle-icon" title="배너 레이아웃 변경">' + IC.grid + '</div>';
+  pickerHTML += '<div class="layout-picker"><div class="picker-grid" style="grid-template-columns:repeat(2,1fr);">';
+
+  // 레이아웃 A: [1칸][1칸][2칸]
+  pickerHTML += '<button class="layout-opt' + (activeIdx === 0 ? ' active' : '') + '" data-layout="A">';
+  pickerHTML += '<div class="lo-combo">';
+  pickerHTML += '<div class="lo-row"><div></div></div>';
+  pickerHTML += '<div class="lo-row"><div></div></div>';
+  pickerHTML += '<div class="lo-row"><div></div><div></div></div>';
+  pickerHTML += '</div></button>';
+
+  // 레이아웃 B: [1칸][2칸][2칸]
+  pickerHTML += '<button class="layout-opt' + (activeIdx === 1 ? ' active' : '') + '" data-layout="B">';
+  pickerHTML += '<div class="lo-combo">';
+  pickerHTML += '<div class="lo-row"><div></div></div>';
+  pickerHTML += '<div class="lo-row"><div></div><div></div></div>';
+  pickerHTML += '<div class="lo-row"><div></div><div></div></div>';
+  pickerHTML += '</div></button>';
+
+  pickerHTML += '</div></div>';
 
   const btn = document.createElement('div');
-  btn.className = 'shout-layout-btn';
-  btn.style.cssText = 'position:absolute;top:8px;right:8px;z-index:100;display:flex;gap:4px;';
-  btn.innerHTML =
-    '<button class="shout-lo-opt' + (!is4 ? ' active' : '') + '" data-cols="2" style="padding:4px 10px;border:1px solid #d1d5db;border-radius:6px;background:' + (!is4 ? '#6366f1;color:#fff' : '#fff;color:#333') + ';font-size:11px;cursor:pointer;font-weight:600;">1+2</button>' +
-    '<button class="shout-lo-opt' + (is4 ? ' active' : '') + '" data-cols="4" style="padding:4px 10px;border:1px solid #d1d5db;border-radius:6px;background:' + (is4 ? '#6366f1;color:#fff' : '#fff;color:#333') + ';font-size:11px;cursor:pointer;font-weight:600;">1+4</button>';
+  btn.className = 'layout-toggle-btn';
+  btn.innerHTML = pickerHTML;
 
-  btn.querySelectorAll('.shout-lo-opt').forEach(opt => {
+  btn.querySelector('.layout-toggle-icon').addEventListener('click', e => {
+    e.stopPropagation();
+    const isOpen = btn.classList.contains('open');
+    document.querySelectorAll('.layout-toggle-btn.open').forEach(b => b.classList.remove('open'));
+    if (!isOpen) btn.classList.add('open');
+  });
+
+  btn.querySelectorAll('.layout-opt').forEach(opt => {
     opt.addEventListener('click', e => {
       e.stopPropagation();
-      const cols = parseInt(opt.dataset.cols);
+      const layout = opt.dataset.layout;
+      const wantSplit = layout === 'B';
       saveSnapshot();
-      _applyShoutHeaderLayout(headerTable, cols);
+      _applyShoutHeaderLayout(headerTable, wantSplit);
       wrapImages();
-      _setupShoutLayoutButton();
-      showToast('상단 레이아웃이 변경되었습니다.');
+      setupLayoutButtons();
+      rebuildInsertZones();
+      showToast('배너 레이아웃이 변경되었습니다.');
     });
   });
 
-  // 상단 헤더 첫 이미지 ie-wrap에 버튼 부착
+  // 첫 번째 ie-wrap에 버튼 부착
   const firstWrap = headerTable.querySelector('.ie-wrap');
   if (firstWrap) {
-    firstWrap.style.position = 'relative';
     firstWrap.appendChild(btn);
   }
+
+  // 피커 외부 클릭 시 닫기
+  document.removeEventListener('click', _closeLayoutPickers);
+  document.addEventListener('click', _closeLayoutPickers);
 }
 
-function _applyShoutHeaderLayout(table, cols) {
+function _applyShoutHeaderLayout(table, isSplit) {
   const tbody = table.querySelector('tbody');
-  const rows = Array.from(tbody.querySelectorAll('tr'));
-
-  // 첫 행(풀너비 이미지) 보존
-  const firstRow = rows[0];
-  const firstImg = firstRow.querySelector('img');
-  const firstSrc = firstImg ? firstImg.src : '';
-  const firstAlt = firstImg ? firstImg.alt : '';
-
-  // 기존 하단 이미지 데이터 수집
-  const existingImgs = [];
-  rows.forEach((tr, i) => {
-    if (i === 0) return; // 첫 행 스킵
-    tr.querySelectorAll('img').forEach(img => {
-      if (img.src || img.alt) existingImgs.push({ src: img.src, alt: img.alt });
-    });
+  // 간격행(height="2") 제외한 이미지 행 찾기
+  const imgRows = Array.from(tbody.querySelectorAll('tr')).filter(tr => {
+    const td = tr.querySelector('td');
+    return td && td.getAttribute('height') !== '2';
   });
+  if (imgRows.length < 3) return;
 
-  // tbody 초기화
-  tbody.innerHTML = '';
+  const row2 = imgRows[1];
 
-  // 1행: 풀너비
-  const tr1 = document.createElement('tr');
-  const td1 = document.createElement('td');
-  td1.setAttribute('width', '720');
-  td1.setAttribute('valign', 'top');
-  td1.setAttribute('colspan', String(cols === 4 ? 7 : 3));
-  const img1 = document.createElement('img');
-  img1.style.cssText = 'vertical-align:top;display:block;';
-  img1.alt = firstAlt; img1.src = firstSrc; img1.border = '0';
-  td1.appendChild(img1);
-  tr1.appendChild(td1);
-  tbody.appendChild(tr1);
+  // Row 2의 기존 이미지 데이터 보존
+  const imgs = Array.from(row2.querySelectorAll('img'));
+  const imgData = imgs.map(img => ({ src: img.src || '', alt: img.alt || '' }));
 
-  // 간격 행
-  const spacerTr = document.createElement('tr');
-  const spacerTd = document.createElement('td');
-  spacerTd.setAttribute('height', '2');
-  spacerTd.setAttribute('valign', 'top');
-  spacerTd.setAttribute('colspan', String(cols === 4 ? 7 : 3));
-  spacerTr.appendChild(spacerTd);
-  tbody.appendChild(spacerTr);
+  // Row 2의 td 모두 제거
+  Array.from(row2.children).forEach(td => td.remove());
 
-  // 하단 행
-  const tr2 = document.createElement('tr');
-  const cellCount = cols === 4 ? 4 : 2;
-  const cellWidth = cols === 4 ? 178 : 359;
-  const gapWidth = 2;
+  const TD_STYLE = 'padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;';
 
-  for (let i = 0; i < cellCount; i++) {
-    if (i > 0) {
-      const gapTd = document.createElement('td');
-      gapTd.setAttribute('width', String(gapWidth));
-      gapTd.setAttribute('valign', 'top');
-      tr2.appendChild(gapTd);
-    }
+  if (!isSplit) {
+    // 풀너비: colspan="3" td 1개
     const td = document.createElement('td');
+    td.setAttribute('width', '720');
+    td.setAttribute('colspan', '3');
     td.setAttribute('valign', 'top');
-    td.setAttribute('width', String(cellWidth));
-    td.style.cssText = 'padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;';
+    td.style.cssText = TD_STYLE;
     const img = document.createElement('img');
-    img.style.cssText = 'vertical-align:top;display:block;width:100%;';
-    img.alt = existingImgs[i] ? existingImgs[i].alt : '';
-    img.src = existingImgs[i] ? existingImgs[i].src : '';
+    img.style.cssText = 'vertical-align:top;display:block;';
+    img.alt = imgData[0] ? imgData[0].alt : '';
+    img.src = imgData[0] ? imgData[0].src : '';
     img.border = '0';
     td.appendChild(img);
-    tr2.appendChild(td);
+    row2.appendChild(td);
+  } else {
+    // 2분할: td(359) + td(2) + td(359)
+    for (let i = 0; i < 2; i++) {
+      if (i > 0) {
+        const gapTd = document.createElement('td');
+        gapTd.setAttribute('width', '2');
+        gapTd.setAttribute('valign', 'top');
+        row2.appendChild(gapTd);
+      }
+      const td = document.createElement('td');
+      td.setAttribute('width', '359');
+      td.setAttribute('valign', 'top');
+      td.style.cssText = TD_STYLE;
+      const img = document.createElement('img');
+      img.style.cssText = 'vertical-align:top;display:block;width:100%;';
+      img.alt = imgData[i] ? imgData[i].alt : '';
+      img.src = imgData[i] ? imgData[i].src : '';
+      img.border = '0';
+      td.appendChild(img);
+      row2.appendChild(td);
+    }
   }
-  tbody.appendChild(tr2);
 }
 
 function setupLayoutButtons(container) {
   const root = container || document.getElementById('newsletter-wrap');
   root.querySelectorAll('.layout-toggle-btn').forEach(el => el.remove());
 
-  // 샤우트: 전용 레이아웃 버튼
+  // 샤우트: 전용 레이아웃 피커
   if (_currentSourceName === 'shout' && !container) {
     _setupShoutLayoutButton();
     return;
@@ -4508,9 +4759,11 @@ function rebuildInsertZones(container) {
     }
   });
 
-  // ── 3. 구분선 삭제 버튼 ──
+  // ── 3. 인접 스페이서 병합 ──
+  _mergeAdjacentSpacers(root);
+  // ── 4. 구분선 삭제 버튼 ──
   setupDividerDeleteButtons(root);
-  // ── 4. 스페이서 편집 ──
+  // ── 5. 스페이서 편집 ──
   setupSpacerEditing(root);
 }
 
@@ -4638,6 +4891,29 @@ function setupDividerDeleteButtons(container) {
       });
       rightTd.appendChild(btn);
     });
+  });
+}
+
+// ── Merge Adjacent Spacers ────────────────────────────────────
+function _mergeAdjacentSpacers(container) {
+  const root = container || document.getElementById('newsletter-wrap');
+  root.querySelectorAll('[data-content-section]').forEach(section => {
+    const innerTbody = section.querySelector('table > tbody');
+    if (!innerTbody) return;
+    const rows = Array.from(innerTbody.children).filter(tr => tr.tagName === 'TR');
+    for (let i = 0; i < rows.length - 1; ) {
+      if (_isSpacerRow(rows[i]) && _isSpacerRow(rows[i + 1])) {
+        const td1 = rows[i].querySelector('td[colspan="3"][height]');
+        const td2 = rows[i + 1].querySelector('td[colspan="3"][height]');
+        const h1 = parseInt(td1.getAttribute('height')) || 0;
+        const h2 = parseInt(td2.getAttribute('height')) || 0;
+        td1.setAttribute('height', String(h1 + h2));
+        rows[i + 1].remove();
+        rows.splice(i + 1, 1);
+      } else {
+        i++;
+      }
+    }
   });
 }
 
@@ -4922,6 +5198,7 @@ function insertArea(insertZoneTr, type) {
   saveSnapshot();
   const tbody = insertZoneTr.parentNode;
   const isBanner = _isInsertZoneInBanner(insertZoneTr);
+  const pad = _currentSourceName === 'shout' ? 65 : 24;
 
   // 위쪽에 기존 콘텐츠가 있으면 스페이서 삽입 (이미지 30px, 텍스트 16px)
   const spacerH = type === 'text' ? 16 : 30;
@@ -4937,11 +5214,11 @@ function insertArea(insertZoneTr, type) {
       tr.innerHTML = '<td colspan="3" style="padding:0;margin:0;font-size:0;line-height:1;vertical-align:top;text-align:center;">' +
         '<img src="" alt="" style="border:0;width:100%;display:block;" /></td>';
     } else {
-      // 본문: 24px + 내용 + 24px
-      tr.innerHTML = '<td width="24"></td>' +
+      // 본문: pad + 내용 + pad
+      tr.innerHTML = '<td width="' + pad + '"></td>' +
         '<td style="padding:0;margin:0;font-size:0;line-height:1;vertical-align:top;text-align:center;">' +
-        '<img src="" alt="" style="border:0;max-width:100%;" /></td>' +
-        '<td width="24"></td>';
+        '<img src="" alt="" style="border:0;' + (_currentSourceName === 'shout' ? 'width:100%;display:block;' : 'max-width:100%;') + '" /></td>' +
+        '<td width="' + pad + '"></td>';
     }
     tbody.insertBefore(tr, insertZoneTr);
     const img = tr.querySelector('img');
@@ -4955,11 +5232,11 @@ function insertArea(insertZoneTr, type) {
       tbody.insertBefore(_createSpacerTr(spacerH), insertZoneTr);
     }
     const tr = document.createElement('tr');
-    tr.innerHTML = '<td width="24"></td>' +
+    tr.innerHTML = '<td width="' + pad + '"></td>' +
       '<td style="font-family:\'Malgun Gothic\',sans-serif;font-size:13px;color:#555;' +
-      'line-height:18px;vertical-align:top;letter-spacing:-1px;word-break:keep-all;">' +
+      'line-height:' + (_currentSourceName === 'shout' ? '20px' : '18px') + ';vertical-align:top;letter-spacing:-1px;word-break:keep-all;">' +
       '</td>' +
-      '<td width="24"></td>';
+      '<td width="' + pad + '"></td>';
     tbody.insertBefore(tr, insertZoneTr);
     const td = tr.querySelectorAll('td')[1];
     wrapOneTextTD(td);
@@ -5008,27 +5285,30 @@ function insertSection(sectionZoneTr) {
   };
 
   // 이미지 행 헬퍼
+  const isShout = _currentSourceName === 'shout';
+  const pad = isShout ? 65 : 24;
+  const divPad = isShout ? 65 : 25;
   const imgRow = () => {
     const tr = document.createElement('tr');
-    tr.innerHTML = '<td width="24"></td>' +
+    tr.innerHTML = '<td width="' + pad + '"></td>' +
       '<td style="padding:0;margin:0;font-size:0;line-height:1;vertical-align:top;text-align:center;">' +
-      '<img src="" alt="" style="border:0;max-width:100%;" /></td>' +
-      '<td width="24"></td>';
+      '<img src="" alt="" style="border:0;' + (isShout ? 'width:100%;display:block;' : 'max-width:100%;') + '" /></td>' +
+      '<td width="' + pad + '"></td>';
     return tr;
   };
 
   const tr1 = imgRow();
   const tr2 = imgRow();
   const tr3 = document.createElement('tr');
-  tr3.innerHTML = '<td width="24"></td>' +
+  tr3.innerHTML = '<td width="' + pad + '"></td>' +
     '<td style="font-family:\'Malgun Gothic\',sans-serif;font-size:13px;color:#555;' +
-    'line-height:18px;vertical-align:top;letter-spacing:-1px;word-break:keep-all;">' +
+    'line-height:' + (isShout ? '20px' : '18px') + ';vertical-align:top;letter-spacing:-1px;word-break:keep-all;">' +
     '</td>' +
-    '<td width="24"></td>';
+    '<td width="' + pad + '"></td>';
   const tr4 = document.createElement('tr');
-  tr4.innerHTML = '<td width="25" height="1" style="padding:0;margin:0;font-size:0;line-height:1;"></td>' +
+  tr4.innerHTML = '<td width="' + divPad + '" height="1" style="padding:0;margin:0;font-size:0;line-height:1;"></td>' +
     '<td height="1" style="padding:0;margin:0;font-size:0;line-height:1;vertical-align:top;background-color:#adadae"></td>' +
-    '<td width="25" height="1" style="padding:0;margin:0;font-size:0;line-height:1;"></td>';
+    '<td width="' + divPad + '" height="1" style="padding:0;margin:0;font-size:0;line-height:1;"></td>';
 
   [tr1, sp(30), tr2, sp(16), tr3, sp(50), tr4, sp(50)].forEach(r => innerTbody.appendChild(r));
 
@@ -5189,7 +5469,6 @@ function saveHTML() {
     wrap.removeAttribute('class');
     wrap.style.display = 'inline-block';
   });
-
   // 날짜 드롭다운 → 텍스트로 치환
   const datePicker = clone.querySelector('.footer-date-picker');
   const dateText = clone.querySelector('.footer-date-text');
@@ -5667,6 +5946,8 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
         id: f.id,
         name: f.name,
         createdAt: f.created_at,
+        source: f.source || 'pentaprism',
+        issueKey: f.issue_key || '',
         images: (itemsData || []).filter(i => i.folder_id === f.id).map(i => ({
           id: i.id, name: i.name, dataUrl: i.public_url
         }))
@@ -5682,7 +5963,7 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
     const sb = _getSb();
     if (!sb) return;
     try {
-      await sb.from('image_folders').upsert({ id: folder.id, name: folder.name, created_at: folder.createdAt });
+      await sb.from('image_folders').upsert({ id: folder.id, name: folder.name, created_at: folder.createdAt, source: folder.source || 'pentaprism', issue_key: folder.issueKey || '' });
     } catch (e) { console.error('Supabase folder create failed:', e); }
   }
 
@@ -5699,6 +5980,41 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
       await sb.from('image_items').delete().eq('folder_id', folderId);
       await sb.from('image_folders').delete().eq('id', folderId);
     } catch (e) { console.error('Supabase folder delete failed:', e); }
+  }
+
+  // FTP에 이미지 즉시 업로드 (보관함 추가 시)
+  const _FTP_BASE = 'https://shout.co.kr';
+
+  function _getFtpRemotePath(folder) {
+    if (folder.source === 'bluehole') return '/images/bluehall/' + folder.issueKey + '/';
+    return '/images/' + folder.issueKey + '/';
+  }
+
+  async function _ftpUploadLibImage(file, folder) {
+    if (!folder.issueKey) {
+      console.warn('FTP upload skipped: folder has no issueKey');
+      return null;
+    }
+    try {
+      const remotePath = _getFtpRemotePath(folder);
+      const name = _generateImageName(file);
+      const dataUrl = await new Promise(r => {
+        const reader = new FileReader();
+        reader.onloadend = () => r(reader.result);
+        reader.readAsDataURL(file);
+      });
+      const resp = await fetch(_FTP_API + '/api/ftp/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ remotePath, files: [{ name, dataUrl }] })
+      });
+      const data = await resp.json();
+      if (!data.ok) throw new Error(data.message);
+      return _FTP_BASE + remotePath + name;
+    } catch (e) {
+      console.warn('FTP library upload failed:', e);
+      return null;
+    }
   }
 
   // Supabase에 이미지 업로드
@@ -5774,7 +6090,7 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
   }
 
   // ── Folder CRUD ──────────────────────────────────────────────
-  function _doCreateFolder(name) {
+  function _doCreateFolder(name, source, issueKey) {
     if (!name || !name.trim()) return;
     const trimmed = name.trim();
     if (folders.some(f => f.name === trimmed)) {
@@ -5785,7 +6101,9 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
       id: 'folder-' + (++folderIdCounter),
       name: trimmed,
       createdAt: Date.now(),
-      images: []
+      images: [],
+      source: source || 'pentaprism',
+      issueKey: issueKey || ''
     };
     folders.unshift(folder);
     _saveLibToStorageLocal();
@@ -5799,10 +6117,65 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
     const chipsEl     = document.getElementById('prompt-suggest-chips');
     const labelEl     = document.getElementById('prompt-suggest-label');
 
-    showPromptModal('새 폴더 이름을 입력하세요:', '', name => {
-      suggestArea.style.display = 'none';
-      _doCreateFolder(name);
-    });
+    // 종류/호수 선택 + 폴더 이름 입력 UI
+    const typeOptions = Object.entries(_TYPE_LABELS).map(([k, v]) =>
+      '<option value="' + k + '">' + v + '</option>'
+    ).join('');
+
+    showPromptModal(
+      '<div style="display:flex;flex-direction:column;gap:10px">' +
+        '<div style="display:flex;gap:8px;align-items:center">' +
+          '<label style="min-width:70px;font-size:13px;color:#94a3b8">뉴스레터</label>' +
+          '<select id="cf-source" style="flex:1;padding:7px 10px;border-radius:8px;border:1px solid rgba(99,102,241,0.25);background:#1e293b;color:#e2e8f0;font-size:14px">' + typeOptions + '</select>' +
+        '</div>' +
+        '<div style="display:flex;gap:8px;align-items:center">' +
+          '<label id="cf-issue-label" style="min-width:70px;font-size:13px;color:#94a3b8">호수</label>' +
+          '<input id="cf-issue" type="text" placeholder="예: 569" style="flex:1;padding:7px 10px;border-radius:8px;border:1px solid rgba(99,102,241,0.25);background:#1e293b;color:#e2e8f0;font-size:14px" />' +
+        '</div>' +
+      '</div>',
+      '', name => {
+        suggestArea.style.display = 'none';
+        const sourceEl = document.getElementById('cf-source');
+        const issueEl = document.getElementById('cf-issue');
+        const source = sourceEl ? sourceEl.value : 'pentaprism';
+        const issueKey = issueEl ? issueEl.value.trim() : '';
+        _doCreateFolder(name, source, issueKey);
+      }
+    );
+
+    // prompt-modal-input 숨기고, 종류/호수 변경 시 자동 생성
+    setTimeout(() => {
+      const sourceEl = document.getElementById('cf-source');
+      const issueEl = document.getElementById('cf-issue');
+      const issueLabel = document.getElementById('cf-issue-label');
+      const input = document.getElementById('prompt-modal-input');
+      if (input) input.style.display = 'none';
+
+      function updateFolderName() {
+        const src = sourceEl.value;
+        const issue = issueEl.value.trim();
+        if (!issue) { input.value = ''; return; }
+        const label = _TYPE_LABELS[src] || src;
+        input.value = src === 'bluehole' ? label + ' ' + issue : label + ' ' + issue + '호';
+      }
+
+      function updateIssueLabel() {
+        if (sourceEl.value === 'bluehole') {
+          issueLabel.textContent = '년월';
+          issueEl.placeholder = '예: 2603';
+        } else {
+          issueLabel.textContent = '호수';
+          issueEl.placeholder = '예: 569';
+        }
+      }
+
+      if (sourceEl && issueEl && input) {
+        sourceEl.addEventListener('change', () => { updateIssueLabel(); updateFolderName(); });
+        issueEl.addEventListener('input', updateFolderName);
+        updateIssueLabel();
+        issueEl.focus();
+      }
+    }, 50);
 
     // AI 추천 표시
     suggestArea.style.display = 'block';
@@ -5826,7 +6199,11 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
           bg.classList.remove('open');
           setTimeout(() => { bg.style.display = 'none'; }, 300);
           suggestArea.style.display = 'none';
-          _doCreateFolder(s);
+          const sourceEl = document.getElementById('cf-source');
+          const issueEl = document.getElementById('cf-issue');
+          const source = sourceEl ? sourceEl.value : 'pentaprism';
+          const issueKey = issueEl ? issueEl.value.trim() : '';
+          _doCreateFolder(s, source, issueKey);
         });
         chipsEl.appendChild(chip);
       });
@@ -5887,7 +6264,7 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
         '<div class="il-folder-icon"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>' +
         '<div class="il-folder-info">' +
           '<div class="il-folder-name">' + folder.name + '</div>' +
-          '<div class="il-folder-meta">' + folder.images.length + '개 이미지</div>' +
+          '<div class="il-folder-meta">' + (folder.source ? (_TYPE_LABELS[folder.source] || '') + ' · ' : '') + folder.images.length + '개 이미지</div>' +
         '</div>' +
         '<button class="il-folder-del"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
 
@@ -5995,28 +6372,31 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
 
     for (const file of imageFiles) {
       const id = 'lib-' + (++libIdCounter);
+
+      // 1) FTP 즉시 업로드
+      showToast(file.name + ' FTP 업로드 중...');
+      const ftpUrl = await _ftpUploadLibImage(file, folder);
+
+      // 2) Supabase 또는 localStorage에 저장
       const sb = _getSb();
+      let thumbUrl = ftpUrl;
       if (sb) {
         const publicUrl = await _sbUploadImage(currentFolderId, id, file);
-        if (publicUrl) {
-          folder.images.push({ id, name: file.name, dataUrl: publicUrl });
-          renderLibrary();
-          showToast(file.name + ' 추가됨');
-          continue;
-        }
+        if (publicUrl) thumbUrl = thumbUrl || publicUrl;
       }
-      // 폴백: base64 localStorage
-      await new Promise(resolve => {
-        const reader = new FileReader();
-        reader.onload = evt => {
-          folder.images.push({ id, name: file.name, dataUrl: evt.target.result });
-          _saveLibToStorageLocal();
-          renderLibrary();
-          showToast(file.name + ' 추가됨');
-          resolve();
-        };
-        reader.readAsDataURL(file);
-      });
+      if (!thumbUrl) {
+        // 폴백: base64 localStorage
+        thumbUrl = await new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onload = evt => resolve(evt.target.result);
+          reader.readAsDataURL(file);
+        });
+      }
+
+      folder.images.push({ id, name: file.name, dataUrl: thumbUrl, ftpUrl: ftpUrl || null });
+      _saveLibToStorageLocal();
+      renderLibrary();
+      showToast(ftpUrl ? file.name + ' 업로드 완료' : file.name + ' 추가됨' + (!folder.issueKey ? ' (호수 미설정)' : ' (FTP 실패)'));
     }
   }
 
@@ -6104,7 +6484,7 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
       if (replBtn) replBtn.dataset.tooltip = '이미지 교체';
       img.removeAttribute('width'); img.removeAttribute('height');
       img.style.width = '100%'; img.style.height = 'auto'; img.style.display = 'block';
-      img.src = libItem.dataUrl;
+      img.src = libItem.ftpUrl || libItem.dataUrl;
       img.addEventListener('load', syncBannerEmptyHeights, { once: true });
       showToast('이미지가 교체되었습니다.');
       return;
@@ -6609,11 +6989,12 @@ function _tplInsertSection(sectionZoneTr) {
 function insertDividerInNewsletter(insertZoneTr) {
   saveSnapshot();
   const tbody = insertZoneTr.parentNode;
+  const divPad = _currentSourceName === 'shout' ? 65 : 25;
   const sp1 = _createSpacerTr(50);
   const divTr = document.createElement('tr');
-  divTr.innerHTML = '<td width="25" height="1" style="padding:0;margin:0;font-size:0;line-height:1;"></td>' +
+  divTr.innerHTML = '<td width="' + divPad + '" height="1" style="padding:0;margin:0;font-size:0;line-height:1;"></td>' +
     '<td height="1" style="padding:0;margin:0;font-size:0;line-height:1;vertical-align:top;background-color:#adadae"></td>' +
-    '<td width="25" height="1" style="padding:0;margin:0;font-size:0;line-height:1;"></td>';
+    '<td width="' + divPad + '" height="1" style="padding:0;margin:0;font-size:0;line-height:1;"></td>';
   const sp2 = _createSpacerTr(50);
   tbody.insertBefore(sp1, insertZoneTr);
   tbody.insertBefore(divTr, insertZoneTr);
