@@ -32,13 +32,26 @@ function getFtpConfig() {
   return { host, port, user, password };
 }
 
+async function connectFtp(client) {
+  const config = getFtpConfig();
+  // TLS(implicit) 먼저 시도, 실패 시 평문 fallback
+  try {
+    await client.access({ ...config, secure: 'implicit', secureOptions: { rejectUnauthorized: false } });
+  } catch (_) {
+    try {
+      await client.access({ ...config, secure: true, secureOptions: { rejectUnauthorized: false } });
+    } catch (__) {
+      await client.access({ ...config, secure: false });
+    }
+  }
+}
+
 // FTP 연결 테스트
 app.get('/api/ftp/status', async (req, res) => {
-  const client = new ftp.Client();
+  const client = new ftp.Client(30000);
   client.ftp.verbose = false;
   try {
-    const config = getFtpConfig();
-    await client.access({ ...config, secure: false });
+    await connectFtp(client);
     res.json({ ok: true, message: 'FTP 연결 성공' });
   } catch (e) {
     res.status(500).json({ ok: false, message: e.message });
@@ -54,11 +67,10 @@ app.post('/api/ftp/upload', async (req, res) => {
     return res.status(400).json({ ok: false, message: '업로드할 파일이 없습니다.' });
   }
 
-  const client = new ftp.Client();
+  const client = new ftp.Client(30000);
   client.ftp.verbose = false;
   try {
-    const config = getFtpConfig();
-    await client.access({ ...config, secure: false });
+    await connectFtp(client);
     await client.ensureDir(remotePath);
 
     const results = [];
@@ -91,11 +103,10 @@ app.post('/api/ftp/upload-html', async (req, res) => {
     return res.status(400).json({ ok: false, message: 'HTML 데이터가 없습니다.' });
   }
 
-  const client = new ftp.Client();
+  const client = new ftp.Client(30000);
   client.ftp.verbose = false;
   try {
-    const config = getFtpConfig();
-    await client.access({ ...config, secure: false });
+    await connectFtp(client);
     await client.ensureDir(remotePath);
 
     const { Readable } = require('stream');
@@ -117,11 +128,10 @@ app.post('/api/ftp/upload-html', async (req, res) => {
 app.post('/api/ftp/exists', async (req, res) => {
   const { remotePath } = req.body;
   if (!remotePath) return res.status(400).json({ ok: false, message: '경로가 없습니다.' });
-  const client = new ftp.Client();
+  const client = new ftp.Client(30000);
   client.ftp.verbose = false;
   try {
-    const config = getFtpConfig();
-    await client.access({ ...config, secure: false });
+    await connectFtp(client);
     // 파일 확인: size() 성공 → 파일 존재
     try {
       await client.size(remotePath);
@@ -144,11 +154,10 @@ app.post('/api/ftp/mkdir', async (req, res) => {
   if (!remotePath) {
     return res.status(400).json({ ok: false, message: '생성할 폴더 경로가 없습니다.' });
   }
-  const client = new ftp.Client();
+  const client = new ftp.Client(30000);
   client.ftp.verbose = false;
   try {
-    const config = getFtpConfig();
-    await client.access({ ...config, secure: false });
+    await connectFtp(client);
     await client.ensureDir(remotePath);
     res.json({ ok: true, created: remotePath });
   } catch (e) {
@@ -165,11 +174,10 @@ app.post('/api/ftp/delete-dir', async (req, res) => {
   if (!remotePath) {
     return res.status(400).json({ ok: false, message: '삭제할 폴더 경로가 없습니다.' });
   }
-  const client = new ftp.Client();
+  const client = new ftp.Client(30000);
   client.ftp.verbose = false;
   try {
-    const config = getFtpConfig();
-    await client.access({ ...config, secure: false });
+    await connectFtp(client);
     await client.removeDir(remotePath);
     res.json({ ok: true, deleted: remotePath });
   } catch (e) {
@@ -186,11 +194,10 @@ app.post('/api/ftp/delete', async (req, res) => {
   if (!remotePath) {
     return res.status(400).json({ ok: false, message: '삭제할 파일 경로가 없습니다.' });
   }
-  const client = new ftp.Client();
+  const client = new ftp.Client(30000);
   client.ftp.verbose = false;
   try {
-    const config = getFtpConfig();
-    await client.access({ ...config, secure: false });
+    await connectFtp(client);
     await client.remove(remotePath);
     res.json({ ok: true, deleted: remotePath });
   } catch (e) {
