@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS templates (
   id         TEXT PRIMARY KEY,
   name       TEXT NOT NULL,
   html       TEXT NOT NULL,
+  source     TEXT NOT NULL DEFAULT 'pentaprism',
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -89,6 +90,13 @@ ON CONFLICT (id) DO NOTHING;
 CREATE POLICY "anon_upload" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'images');
 CREATE POLICY "anon_read" ON storage.objects FOR SELECT USING (bucket_id = 'images');
 CREATE POLICY "anon_delete" ON storage.objects FOR DELETE USING (bucket_id = 'images');
+
+-- ============================================================
+-- Migration: templates에 source 컬럼 추가
+-- 기존 테이블이 있는 경우 아래 SQL을 실행하세요:
+-- ============================================================
+
+ALTER TABLE templates ADD COLUMN IF NOT EXISTS source TEXT NOT NULL DEFAULT 'pentaprism';
 
 -- ============================================================
 -- Migration: image_folders에 source, issue_key, ftp_path 컬럼 추가
