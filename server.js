@@ -113,29 +113,96 @@ app.post('/api/ftp/upload-html', async (req, res) => {
   }
 });
 
-// 이미지 프록시 (외부 URL → base64 변환, CORS 우회)
-app.get('/api/proxy-image', (req, res) => {
-  const url = req.query.url;
-  if (!url) return res.status(400).json({ ok: false, message: 'url 파라미터가 없습니다.' });
-  const lib = url.startsWith('https') ? require('https') : require('http');
-  lib.get(url, (proxyRes) => {
-    if (proxyRes.statusCode !== 200) {
-      return res.status(500).json({ ok: false, message: 'HTTP ' + proxyRes.statusCode });
-    }
-    const contentType = proxyRes.headers['content-type'] || 'image/jpeg';
-    const chunks = [];
-    proxyRes.on('data', c => chunks.push(c));
-    proxyRes.on('end', () => {
-      const buffer = Buffer.concat(chunks);
-      const base64 = 'data:' + contentType + ';base64,' + buffer.toString('base64');
-      res.json({ ok: true, dataUrl: base64 });
-    });
-  }).on('error', (e) => {
-    res.status(500).json({ ok: false, message: e.message });
-  });
+// FTP 폴더 존재 확인
+app.post('/api/ftp/exists', async (req, res) => {
+  const { remotePath } = req.body;
+  if (!remotePath) return res.status(400).json({ ok: false, message: '경로가 없습니다.' });
+  const client = new ftp.Client();
+  client.ftp.verbose = false;
+  try {
+    const config = getFtpConfig();
+    await client.access({ ...config, secure: false });
+    // 파일 확인: size() 성공 → 파일 존재
+    try {
+      await client.size(remotePath);
+      res.json({ ok: true, exists: true });
+      return;
+    } catch (_) { /* size 실패 → 파일 아님, 디렉토리 확인 */ }
+    // 디렉토리 확인: cd 성공 → 디렉토리 존재
+    await client.cd(remotePath);
+    res.json({ ok: true, exists: true });
+  } catch (e) {
+    res.json({ ok: true, exists: false });
+  } finally {
+    client.close();
+  }
 });
 
-const PORT = 3900;
+// FTP 폴더 생성
+app.post('/api/ftp/mkdir', async (req, res) => {
+  const { remotePath } = req.body;
+  if (!remotePath) {
+    return res.status(400).json({ ok: false, message: '생성할 폴더 경로가 없습니다.' });
+  }
+  const client = new ftp.Client();
+  client.ftp.verbose = false;
+  try {
+    const config = getFtpConfig();
+    await client.access({ ...config, secure: false });
+    await client.ensureDir(remotePath);
+    res.json({ ok: true, created: remotePath });
+  } catch (e) {
+    console.error('FTP 폴더 생성 실패:', e.message);
+    res.status(500).json({ ok: false, message: e.message });
+  } finally {
+    client.close();
+  }
+});
+
+// FTP 폴더 삭제 (하위 파일 포함)
+app.post('/api/ftp/delete-dir', async (req, res) => {
+  const { remotePath } = req.body;
+  if (!remotePath) {
+    return res.status(400).json({ ok: false, message: '삭제할 폴더 경로가 없습니다.' });
+  }
+  const client = new ftp.Client();
+  client.ftp.verbose = false;
+  try {
+    const config = getFtpConfig();
+    await client.access({ ...config, secure: false });
+    await client.removeDir(remotePath);
+    res.json({ ok: true, deleted: remotePath });
+  } catch (e) {
+    console.error('FTP 폴더 삭제 실패:', e.message);
+    res.status(500).json({ ok: false, message: e.message });
+  } finally {
+    client.close();
+  }
+});
+
+// FTP 파일 삭제
+app.post('/api/ftp/delete', async (req, res) => {
+  const { remotePath } = req.body;
+  if (!remotePath) {
+    return res.status(400).json({ ok: false, message: '삭제할 파일 경로가 없습니다.' });
+  }
+  const client = new ftp.Client();
+  client.ftp.verbose = false;
+  try {
+    const config = getFtpConfig();
+    await client.access({ ...config, secure: false });
+    await client.remove(remotePath);
+    res.json({ ok: true, deleted: remotePath });
+  } catch (e) {
+    console.error('FTP 삭제 실패:', e.message);
+    res.status(500).json({ ok: false, message: e.message });
+  } finally {
+    client.close();
+  }
+});
+
+
+const PORT = process.env.PORT || 3900;
 app.listen(PORT, () => {
   console.log(`\n  pentanews 서버 실행 중: http://localhost:${PORT}\n`);
 });

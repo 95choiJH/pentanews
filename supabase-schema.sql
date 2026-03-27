@@ -43,7 +43,10 @@ CREATE TABLE IF NOT EXISTS drafts (
 CREATE TABLE IF NOT EXISTS image_folders (
   id         TEXT PRIMARY KEY,
   name       TEXT NOT NULL,
-  created_at BIGINT NOT NULL
+  created_at BIGINT NOT NULL,
+  source     TEXT NOT NULL DEFAULT 'pentaprism',
+  issue_key  TEXT NOT NULL DEFAULT '',
+  ftp_path   TEXT NOT NULL DEFAULT ''
 );
 
 CREATE TABLE IF NOT EXISTS image_items (
@@ -86,3 +89,12 @@ ON CONFLICT (id) DO NOTHING;
 CREATE POLICY "anon_upload" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'images');
 CREATE POLICY "anon_read" ON storage.objects FOR SELECT USING (bucket_id = 'images');
 CREATE POLICY "anon_delete" ON storage.objects FOR DELETE USING (bucket_id = 'images');
+
+-- ============================================================
+-- Migration: image_folders에 source, issue_key, ftp_path 컬럼 추가
+-- 기존 테이블이 있는 경우 아래 SQL을 실행하세요:
+-- ============================================================
+
+ALTER TABLE image_folders ADD COLUMN IF NOT EXISTS source TEXT NOT NULL DEFAULT 'pentaprism';
+ALTER TABLE image_folders ADD COLUMN IF NOT EXISTS issue_key TEXT NOT NULL DEFAULT '';
+ALTER TABLE image_folders ADD COLUMN IF NOT EXISTS ftp_path TEXT NOT NULL DEFAULT '';

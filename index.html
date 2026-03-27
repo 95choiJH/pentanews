@@ -64,11 +64,12 @@
     .tbtn-ghost:hover { background: rgba(99,102,241,0.16); color: #4338ca; }
     .tbtn-ghost.on { background: #4f46e5; color: #fff; }
     .tbtn-ghost.on:hover { background: #4338ca; }
-    .tbtn-primary { background: #4f46e5; color: #fff; padding: 0 14px; border-radius: 10px; font-size: 12px; font-weight: 700; gap: 6px; }
+    .tbtn-primary { background: #4f46e5; color: #fff; width: auto; padding: 0 14px; border-radius: 10px; font-size: 12px; font-weight: 700; gap: 6px; }
     .tbtn-primary:hover { background: #4338ca; }
-    .tbtn-primary svg { width: 15px; height: 15px; }
+    .tbtn-primary svg { width: 17px; height: 17px; }
     /* ── 편집 종료 버튼 확장 ─────────────────────────── */
-    #toggle-btn { transition: width .3s ease, background .2s, color .2s, transform .15s, box-shadow .2s; overflow: hidden; }
+    #toggle-btn { transition: width .3s ease, background .2s, color .2s, transform .15s, box-shadow .2s; overflow: visible; }
+    #toggle-btn.on[data-tooltip]::after { display: none; }
     #toggle-btn .toggle-label { display: none; font-size: 12px; font-weight: 700; white-space: nowrap; margin-left: 4px; }
     #toggle-btn.on { width: auto; padding: 0 14px 0 10px; gap: 4px; border-radius: 12px; }
     #toggle-btn.on .toggle-label { display: inline; }
@@ -151,11 +152,11 @@
     .hs-item-meta { display: flex; align-items: center; gap: 6px; font-size: 10px; color: #9ca3af; }
     .hs-source-tag {
       padding: 1px 6px; border-radius: 6px;
-      font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
     }
     .hs-source-tag.pentaprism { background: rgba(99,102,241,0.12); color: #6366f1; }
     .hs-source-tag.shout { background: rgba(16,185,129,0.12); color: #059669; }
-    .hs-source-tag.bluehole { background: rgba(245,158,11,0.12); color: #d97706; }
+    .hs-source-tag.bluehall { background: rgba(8,145,178,0.12); color: #0891b2; }
     .hs-item-del {
       position: absolute; top: 8px; right: 8px;
       width: 22px; height: 22px; border: none; border-radius: 6px;
@@ -204,7 +205,7 @@
     /* 소스별 액센트 컬러 */
     #canvas-label.source-pentaprism { --cl-accent: 99,102,241; }
     #canvas-label.source-shout      { --cl-accent: 16,185,129; }
-    #canvas-label.source-bluehole   { --cl-accent: 245,158,11; }
+    #canvas-label.source-bluehall   { --cl-accent: 8,145,178; }
     /* 편집 모드: 페이드 아웃 */
     #canvas-label { transition: opacity .25s ease, visibility .25s ease, background .3s, left .25s ease, top .25s ease; }
     .edit-mode-active #canvas-label { opacity: 0; visibility: hidden; pointer-events: none; }
@@ -1202,37 +1203,14 @@
     }
     .il-back-btn:hover { text-decoration: underline; }
 
-    /* ── AI Suggest Chips ───────────────────────────────── */
-    .suggest-chip {
-      padding: 5px 12px;
-      border: 1px solid rgba(99,102,241,0.25);
-      border-radius: 16px;
-      background: rgba(99,102,241,0.06);
-      color: #4f46e5;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .15s, border-color .15s, transform .1s;
+    .source-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .source-chip {
+      padding: 5px 14px; border: 1px solid rgba(99,102,241,0.25); border-radius: 16px;
+      background: rgba(99,102,241,0.06); color: #94a3b8; font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: background .15s, border-color .15s, color .15s;
     }
-    .suggest-chip:hover {
-      background: rgba(99,102,241,0.14);
-      border-color: #6366f1;
-      transform: scale(1.04);
-    }
-    .suggest-chip:active { transform: scale(0.97); }
-    .suggest-loading {
-      font-size: 11px; color: #9ca3af;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .suggest-loading::before {
-      content: '';
-      width: 14px; height: 14px;
-      border: 2px solid rgba(99,102,241,0.2);
-      border-top-color: #6366f1;
-      border-radius: 50%;
-      animation: suggest-spin 0.6s linear infinite;
-    }
-    @keyframes suggest-spin { to { transform: rotate(360deg); } }
+    .source-chip:hover { background: rgba(99,102,241,0.12); color: #6366f1; }
+    .source-chip.active { background: #6366f1; color: #fff; border-color: #6366f1; }
 
     /* ── Template Mode ──────────────────────────────────── */
     body.template-mode-active #newsletter-wrap { display: none; }
@@ -1241,13 +1219,14 @@
     body.template-mode-active #template-label { display: flex !important; }
     body.template-mode-active .editor-only { display: none !important; }
     body.template-mode-active #og-panel { display: none !important; }
+
     body.template-mode-active #toolbar > *:not(.tpl-only) { display: none !important; }
     body.template-mode-active #edit-top-bar { display: none !important; }
     body.template-mode-active .tpl-only { display: flex !important; }
 
     /* 에디터 모드에서 템플릿 보관함 토글 */
     #template-library {
-      position: fixed; right: 20px; top: 28px; bottom: 80px;
+      position: fixed; right: 20px; top: 28px; bottom: 28px;
       width: 240px; z-index: 900;
       background: rgba(255,255,255,0.88);
       backdrop-filter: blur(24px);
@@ -1424,7 +1403,7 @@
     <div id="edit-popup">
       <button class="ep-btn" onclick="startNewNewsletter('pentaprism')"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>펜타프리즘 뉴스레터</button>
       <button class="ep-btn" onclick="startNewNewsletter('shout')"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>샤우트 뉴스레터</button>
-      <button class="ep-btn" onclick="startNewNewsletter('bluehole')"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>블루홀미팅 뉴스레터</button>
+      <button class="ep-btn" onclick="startNewNewsletter('bluehall')"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>블루홀미팅 뉴스레터</button>
     </div>
   </div>
   <div class="sidebar-divider"></div>
@@ -1433,8 +1412,8 @@
   <button class="tbtn tbtn-ghost editor-only" id="tpl-mode-btn" data-tooltip="템플릿 제작" onclick="enterTemplateMode()"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M17 14v7m-3.5-3.5h7"/></svg></button>
   <button class="tbtn tbtn-ghost editor-only" id="undo-btn" data-tooltip="되돌리기" onclick="undoLast()" disabled><svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></button>
   <div class="sidebar-divider editor-only"></div>
-  <button class="tbtn tbtn-ghost view-only" id="ai-alt-btn" data-tooltip="AI Alt 생성" onclick="generateAltTexts()"><svg viewBox="0 0 24 24"><path d="M12 2l2.09 6.26L20.18 10l-6.09 1.74L12 18l-2.09-6.26L3.82 10l6.09-1.74L12 2z"/><path d="M19 15l1.04 3.13L23.18 19l-3.14.87L19 23l-1.04-3.13L14.82 19l3.14-.87L19 15z" opacity=".6"/></svg></button>
-  <div class="sidebar-divider view-only"></div>
+  <button class="tbtn tbtn-ghost view-only" id="copy-htm-btn" data-tooltip="HTM 복사" onclick="copyHTML()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+  <button class="tbtn tbtn-ghost view-only" id="download-htm-btn" data-tooltip="HTM 다운로드" onclick="saveHTML()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
   <button class="tbtn tbtn-primary" id="deploy-btn" data-tooltip="배포하기" onclick="deployNewsletter()"><svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg></button>
   <!-- 템플릿 모드 버튼 -->
   <button class="tbtn tbtn-ghost tpl-only" id="tpl-back-btn" data-tooltip="뒤로" onclick="exitTemplateMode()" style="display:none"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
@@ -1456,7 +1435,6 @@
 <div id="image-library">
   <div class="il-header">
     <span class="il-title">이미지 보관함</span>
-    <span class="il-count" id="il-count">0</span>
   </div>
   <div class="il-dropzone" id="il-dropzone">
     <div class="il-dropzone-hint">
@@ -1499,13 +1477,13 @@
   <strong id="edit-type-label">PENTAPRISM</strong>
   <span class="canvas-divider"></span>
   <span id="issue-number-wrap" class="issue-edit-field">
-    <input type="text" id="issue-number" class="issue-input" placeholder="569" maxlength="6" autocomplete="off" />
+    <input type="text" id="issue-number" class="issue-input" placeholder="" maxlength="6" autocomplete="off" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
     <span>호</span>
   </span>
   <span id="issue-date-wrap" class="issue-edit-field">
-    <input type="text" id="issue-date-year" class="issue-input" placeholder="26" maxlength="2" autocomplete="off" />
+    <input type="text" id="issue-date-year" class="issue-input" placeholder="" maxlength="2" autocomplete="off" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
     <span>년</span>
-    <input type="text" id="issue-date-month" class="issue-input" placeholder="02" maxlength="2" autocomplete="off" />
+    <input type="text" id="issue-date-month" class="issue-input" placeholder="" maxlength="2" autocomplete="off" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
     <span>월호</span>
   </span>
 </div>
@@ -1515,8 +1493,7 @@
 
   <!-- ── Template Builder (hidden by default) ── -->
   <div id="template-label" style="display:none">
-    <strong>TEMPLATE</strong>
-    <span class="canvas-badge">Builder</span>
+    <strong>템플릿 제작</strong>
   </div>
   <div id="template-wrap" class="edit-mode" style="display:none">
     <div style="max-width:720px;margin:0 auto;text-align:center;font-size:0;line-height:0">
@@ -1649,7 +1626,7 @@
                             <tr>
                                 <td width="24"></td>
                                 <td style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top">
-                                    <img src="https://pentapost.net/newsletter/images/567/footer.jpg" alt="PENTAPRISM (주)펜타브리드 서울시 서초구 서운로26길 9 펜타타워 Tel 02.6911.5595, Fax 02.6499.2525 WWW.PENTABREED.COM" width="670" height="85" usemap="#footer" style="border: 0" />
+                                    <img src="https://shout.co.kr/images/com/footer.jpg" alt="PENTAPRISM (주)펜타브리드 서울시 서초구 서운로26길 9 펜타타워 Tel 02.6911.5595, Fax 02.6499.2525 WWW.PENTABREED.COM" width="670" height="85" usemap="#footer" style="border: 0" />
                                     <map id="footer" name="footer">
                                         <area shape="rect" coords="238,70,384,79" href="https://www.pentabreed.com" target="_blank" alt="PENTAPOST" />
                                     </map>
@@ -1678,7 +1655,7 @@
                             <tr>
                                 <td width="24"></td>
                                 <td width="240" style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top">
-                                    <img src="https://pentapost.net/newsletter/images/567/footer2.jpg" alt="펜타프리즘" width="100" height="24" style="border: 0" />
+                                    <img src="https://shout.co.kr/images/com/footer_pentaprism.jpg" alt="펜타프리즘" width="100" height="24" style="border: 0" />
                                 </td>
                                 <td style="font-family: 'Malgun Gothic', sans-serif;font-size: 12px;color: #414042;letter-spacing:-1px;line-height: 18px;vertical-align: top;word-break: keep-all;">
                                     본 메일은 <span class="footer-date-text" id="footer-date-text"></span><span class="footer-date-picker" id="footer-date-picker"><select id="fd-year"></select><span>년</span><select id="fd-month"></select><span>월</span><select id="fd-day"></select><span>일 기준,</span></span> PENTAPRISM 수신에 동의하신 분들께 발송됩니다.<br/>
@@ -1750,6 +1727,12 @@
 
 <div id="toast"></div>
 
+<!-- 이미지 뷰어 -->
+<div id="img-viewer-bg" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;cursor:zoom-out;" onclick="this.style.display='none';document.body.style.overflow=''">
+  <img id="img-viewer-img" style="max-width:90vw;max-height:90vh;object-fit:contain;border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,0.4);" />
+  <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;font-size:12px;opacity:0.6;" id="img-viewer-name"></div>
+</div>
+
 <div id="tpl-name-modal-bg" class="glass-modal-bg">
   <div id="tpl-name-modal" class="glass-modal">
     <div class="glass-modal-head">
@@ -1757,6 +1740,8 @@
       <button class="glass-modal-close" onclick="_closeTplNameModal()">✕</button>
     </div>
     <div class="glass-modal-body">
+      <label style="display:block;margin-bottom:8px;">뉴스레터</label>
+      <div id="tpl-source-chips" class="source-chips" style="margin-bottom:12px;"></div>
       <label for="tpl-name-input">템플릿 이름</label>
       <input type="text" id="tpl-name-input" placeholder="새 템플릿" />
     </div>
@@ -1789,13 +1774,6 @@
       <div id="prompt-modal-body" style="margin-bottom:12px"></div>
       <input type="text" id="prompt-modal-input" style="width:100%;padding:8px 12px;border:1px solid rgba(99,102,241,0.25);border-radius:8px;font-size:13px;outline:none;transition:border-color .15s;" onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='rgba(99,102,241,0.25)'" />
       <div id="prompt-modal-note" style="display:none;margin-top:6px;font-size:11px;color:#ef4444;"></div>
-      <div id="prompt-suggest" style="display:none;margin-top:10px">
-        <div style="font-size:10px;color:#9ca3af;margin-bottom:6px;display:flex;align-items:center;gap:4px">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-          <span id="prompt-suggest-label">AI 추천</span>
-        </div>
-        <div id="prompt-suggest-chips" style="display:flex;flex-wrap:wrap;gap:6px"></div>
-      </div>
     </div>
     <div class="glass-modal-foot">
       <button class="gm-btn-cancel" id="prompt-no">취소</button>
@@ -1891,8 +1869,8 @@ let _sidebarView = 'images'; // 'images' | 'templates'
 let _globalDragType = null; // shared drag type for cross-container drag
 let _currentSourceName = 'pentaprism';
 let _loadedHistoryId = null;   // 히스토리에서 불러온 항목의 ID 추적
-const _TYPE_LABELS = { pentaprism: '펜타프리즘', shout: '샤우트', bluehole: '블루홀미팅' };
-const _TYPE_UPPERS = { pentaprism: 'PENTAPRISM', shout: 'SHOUT', bluehole: 'BLUEHALL MEETING' };
+const _TYPE_LABELS = { pentaprism: '펜타프리즘', shout: '샤우트', bluehall: '블루홀미팅' };
+const _TYPE_UPPERS = { pentaprism: 'PENTAPRISM', shout: 'SHOUT', bluehall: 'BLUEHALL MEETING' };
 
 function _updateTopBar(source, issueData) {
   const prevSource = _currentSourceName;
@@ -1904,12 +1882,14 @@ function _updateTopBar(source, issueData) {
 
   const canvasLabel = document.getElementById('canvas-label');
   const editBar = document.getElementById('edit-top-bar');
-  const isDateMode = _currentSourceName === 'bluehole';
+  const isDateMode = _currentSourceName === 'bluehall';
   if (canvasLabel) {
     canvasLabel.classList.toggle('date-mode', isDateMode);
-    canvasLabel.classList.remove('source-pentaprism', 'source-shout', 'source-bluehole');
+    canvasLabel.classList.remove('source-pentaprism', 'source-shout', 'source-bluehall');
     canvasLabel.classList.add('source-' + _currentSourceName);
   }
+  document.body.classList.remove('source-pentaprism', 'source-shout', 'source-bluehall');
+  document.body.classList.add('source-' + _currentSourceName);
   if (editBar) {
     editBar.classList.toggle('date-mode', isDateMode);
     const editLabel = document.getElementById('edit-type-label');
@@ -1937,7 +1917,7 @@ function _updateTopBar(source, issueData) {
 function _updateViewLabel() {
   const el = document.getElementById('issue-view-label');
   if (!el) return;
-  if (_currentSourceName === 'bluehole') {
+  if (_currentSourceName === 'bluehall') {
     const y = (document.getElementById('issue-date-year')?.value || '').trim();
     const m = (document.getElementById('issue-date-month')?.value || '').trim();
     el.textContent = (y && m) ? y + '년 ' + m + '월' : '';
@@ -1949,7 +1929,7 @@ function _updateViewLabel() {
 
 // 현재 모드에 맞는 호수/년월 식별자 반환
 function _getIssueIdentifier() {
-  if (_currentSourceName === 'bluehole') {
+  if (_currentSourceName === 'bluehall') {
     const y = (document.getElementById('issue-date-year')?.value || '').trim();
     const m = (document.getElementById('issue-date-month')?.value || '').trim();
     return { year: y, month: m, display: y + '년 ' + m + '월', empty: !y || !m, key: y + '-' + m };
@@ -1959,7 +1939,31 @@ function _getIssueIdentifier() {
 }
 // ── History Sidebar ─────────────────────────────────────────
 const SOURCE_NAME = 'pentaprism';
-const SOURCE_LABELS = { pentaprism: '펜타프리즘', shout: '샤우트', bluehole: '블루홀미팅' };
+const SOURCE_LABELS = { pentaprism: '펜타프리즘', shout: '샤우트', bluehall: '블루홀미팅' };
+
+function _renderSourceChips(containerId, activeSource) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+  Object.entries(SOURCE_LABELS).forEach(([key, label]) => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'source-chip' + (key === activeSource ? ' active' : '');
+    chip.dataset.source = key;
+    chip.textContent = label;
+    chip.addEventListener('click', () => {
+      container.querySelectorAll('.source-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      container.dispatchEvent(new CustomEvent('source-change', { detail: key }));
+    });
+    container.appendChild(chip);
+  });
+}
+
+function _getActiveSource(containerId) {
+  const active = document.querySelector('#' + containerId + ' .source-chip.active');
+  return active ? active.dataset.source : 'pentaprism';
+}
 const HIST_SIDEBAR_MAX = 50;
 
 // ── IndexedDB 기반 히스토리 저장소 (로컬 폴백) ──────────────
@@ -2035,6 +2039,31 @@ function _fromHistRow(row) {
 }
 
 const _histDB = {
+  async getLatest() {
+    const sb = _getSb();
+    if (!sb) {
+      const all = _localHistDB.getAll();
+      return all.length > 0 ? all[0] : null;
+    }
+    try {
+      const { data, error } = await sb
+        .from('history')
+        .select('*')
+        .order('saved_at', { ascending: false })
+        .limit(1)
+        .single();
+      if (error || !data) {
+        const all = _localHistDB.getAll();
+        return all.length > 0 ? all[0] : null;
+      }
+      return _fromHistRow(data);
+    } catch (e) {
+      console.error('Supabase history getLatest failed, falling back:', e);
+      const all = _localHistDB.getAll();
+      return all.length > 0 ? all[0] : null;
+    }
+  },
+
   async getAll() {
     const sb = _getSb();
     if (!sb) return _localHistDB.getAll();
@@ -2118,7 +2147,7 @@ async function saveToHistory(name, overwriteId) {
     name: name,
     source: _currentSourceName || SOURCE_NAME,
     issueKey: issueId.key,
-    issueData: _currentSourceName === 'bluehole' ? { year: issueId.year, month: issueId.month } : issueId.number,
+    issueData: _currentSourceName === 'bluehall' ? { year: issueId.year, month: issueId.month } : issueId.number,
     html: html,
     footerDate: footerDate,
     og: { ..._ogData },
@@ -2602,10 +2631,10 @@ async function _loadTemplates() {
   }
 }
 
-async function addTemplate(name, html) {
+async function addTemplate(name, html, source) {
   const id = 'tpl-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
   const now = new Date().toISOString();
-  const tpl = { id, name, html, source: _currentSourceName || 'pentaprism', createdAt: now, updatedAt: now };
+  const tpl = { id, name, html, source: source || _currentSourceName || 'pentaprism', createdAt: now, updatedAt: now };
   const arr = _loadTemplatesLocal();
   arr.push(tpl);
   _saveTemplatesLocal(arr);
@@ -2782,7 +2811,7 @@ const _SHOUT_INITIAL_HTML = `
                             <tr>
                                 <td width="65"></td>
                                 <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;text-align:center;">
-                                    <img src="https://pentapost.net/newsletter/images/482/con_btn.jpg" alt="Continue" style="border:0;" />
+                                    <img src="https://shout.co.kr/images/com/con_btn.jpg" alt="Continue" style="border:0;" />
                                 </td>
                                 <td width="65"></td>
                             </tr>
@@ -2829,7 +2858,7 @@ const _SHOUT_INITIAL_HTML = `
                             <tr>
                                 <td width="65"></td>
                                 <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;text-align:center;">
-                                    <img src="https://pentapost.net/newsletter/images/482/con_btn.jpg" alt="Continue" style="border:0;" />
+                                    <img src="https://shout.co.kr/images/com/con_btn.jpg" alt="Continue" style="border:0;" />
                                 </td>
                                 <td width="65"></td>
                             </tr>
@@ -2876,7 +2905,7 @@ const _SHOUT_INITIAL_HTML = `
                             <tr>
                                 <td width="65"></td>
                                 <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;text-align:center;">
-                                    <img src="https://pentapost.net/newsletter/images/482/con_btn.jpg" alt="Continue" style="border:0;" />
+                                    <img src="https://shout.co.kr/images/com/con_btn.jpg" alt="Continue" style="border:0;" />
                                 </td>
                                 <td width="65"></td>
                             </tr>
@@ -2901,7 +2930,7 @@ const _SHOUT_INITIAL_HTML = `
                             <tr>
                                 <td width="65"></td>
                                 <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
-                                    <img src="https://pentapost.net/newsletter/images/482/footer_address.jpg" alt="펜타포스트 서울시 서초구 서운로26길 9 펜타타워 Tel _ 02 6911 5555 Fax _ 02 6528 2528 www.pentabreed.com" style="border:0;width:100%;display:block;" />
+                                    <img src="https://shout.co.kr/images/com/footer_address.jpg" alt="펜타포스트 서울시 서초구 서운로26길 9 펜타타워 Tel _ 02 6911 5555 Fax _ 02 6528 2528 www.pentabreed.com" style="border:0;width:100%;display:block;" />
                                 </td>
                                 <td width="65"></td>
                             </tr>
@@ -2928,7 +2957,7 @@ const _SHOUT_INITIAL_HTML = `
                             <tr>
                                 <td width="65"></td>
                                 <td width="165" style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
-                                    <img src="https://pentapost.net/newsletter/images/568/footer_shout.jpg" alt="샤우트" style="border:0;display:block;" />
+                                    <img src="https://shout.co.kr/images/com/footer_shout.jpg" alt="샤우트" style="border:0;display:block;" />
                                 </td>
                                 <td style="font-family:'Malgun Gothic',sans-serif; font-size:12px; vertical-align:top;">
                                     <p style="margin:0; text-align:left; color:#898b8e; line-height:17px; font-size:12px; letter-spacing:-0.5px;">
@@ -2939,6 +2968,93 @@ const _SHOUT_INITIAL_HTML = `
                             </tr>
                             <tr>
                                 <td colspan="4" height="30"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>`;
+
+const _BLUEHALL_INITIAL_HTML = `
+<div style="margin: 0px auto; width: 720px; line-height: 0; font-size: 0px; position: relative;">
+    <table width="720" align="center" style="margin: 0px; padding: 0px; border: currentColor; border-image: none; font-size: 0px;" border="0" cellspacing="0" cellpadding="0">
+        <tbody>
+            <tr>
+                <td height="30"></td>
+            </tr>
+            <!-- ── 콘텐츠 섹션 1 ── -->
+            <tr data-content-section>
+                <td>
+                    <table cellpadding="0" cellspacing="0" style="width: 100%;padding: 0;margin: 0;font-size: 0;" border="0">
+                        <tbody>
+                            <tr>
+                                <td width="24"></td>
+                                <td style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top;text-align:center;">
+                                    <img style="vertical-align: top; display: block; width: 100%;" alt="" src="" border="0">
+                                </td>
+                                <td width="24"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" height="40"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <!-- ── 콘텐츠 섹션 2 ── -->
+            <tr data-content-section>
+                <td>
+                    <table cellpadding="0" cellspacing="0" style="width: 100%;padding: 0;margin: 0;font-size: 0;" border="0">
+                        <tbody>
+                            <tr>
+                                <td width="24"></td>
+                                <td style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top;text-align:center;">
+                                    <img style="vertical-align: top; display: block; width: 100%;" alt="" src="" border="0">
+                                </td>
+                                <td width="24"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" height="40"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <!-- ── 콘텐츠 섹션 3 ── -->
+            <tr data-content-section>
+                <td>
+                    <table cellpadding="0" cellspacing="0" style="width: 100%;padding: 0;margin: 0;font-size: 0;" border="0">
+                        <tbody>
+                            <tr>
+                                <td width="24"></td>
+                                <td style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top;text-align:center;">
+                                    <img style="vertical-align: top; display: block; width: 100%;" alt="" src="" border="0">
+                                </td>
+                                <td width="24"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" height="40"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <!-- ── Footer ── -->
+            <tr>
+                <td>
+                    <table cellpadding="0" cellspacing="0" style="width: 100%;padding: 0;margin: 0;font-size: 0;" border="0">
+                        <tbody>
+                            <tr>
+                                <td width="24"></td>
+                                <td style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top;text-align:center;">
+                                    <img src="https://shout.co.kr/images/com/footer_bluehall.jpg" alt="BLUE HALL MEETING" style="vertical-align: top; display: block; width: 100%; border: 0;" />
+                                </td>
+                                <td width="24"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" height="30"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -2997,7 +3113,7 @@ async function _runMigrationIfNeeded() {
         }
       } catch {}
       for (const folder of localFolders) {
-        await sb.from('image_folders').upsert({ id: folder.id, name: folder.name, created_at: folder.createdAt, source: folder.source || 'pentaprism', issue_key: folder.issueKey || '' });
+        await sb.from('image_folders').upsert({ id: folder.id, name: folder.name, created_at: folder.createdAt, source: folder.source || 'pentaprism', issue_key: folder.issueKey || '', ftp_path: folder.ftpPath || '' });
         for (const img of folder.images) {
           if (!img.dataUrl || !img.dataUrl.startsWith('data:')) continue;
           try {
@@ -3024,137 +3140,20 @@ async function _runMigrationIfNeeded() {
   }
 }
 
-// ── AI Alt Text Generation (Gemini Vision) ──────────────────
-const _GEMINI_KEY = 'AIzaSyDwbDKipeAjwgTbpz08-2ZZrnfs0SSNV-Y';
-const _GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + _GEMINI_KEY;
-
-async function generateAltTexts() {
-  const wrap = document.getElementById('newsletter-wrap');
-  if (!wrap) return;
-
-  const imgs = Array.from(wrap.querySelectorAll('img')).filter(img => {
-    const src = img.src || '';
-    if (!src || src.startsWith('data:')) return false;
-    const w = img.naturalWidth || img.width || parseInt(img.getAttribute('width')) || 999;
-    const h = img.naturalHeight || img.height || parseInt(img.getAttribute('height')) || 999;
-    if (w <= 10 || h <= 10) return false;
-    return true;
-  });
-
-  if (imgs.length === 0) {
-    showToast('이미지가 없습니다');
-    return;
-  }
-
-  const btn = document.getElementById('ai-alt-btn');
-  btn.disabled = true;
-  btn.dataset.tooltip = '생성 중...';
-  showToast(`${imgs.length}개 이미지 분석 중...`);
-
-  // Convert images to base64 (use CORS proxy for cross-origin images)
-  const imgList = [];
-  for (const img of imgs) {
-    const src = img.src || '';
-    if (!src.startsWith('http')) continue;
-    const b64 = await _imgToBase64(src);
-    if (b64) imgList.push({ el: img, ...b64 });
-  }
-
-  if (imgList.length === 0) {
-    btn.disabled = false;
-    btn.dataset.tooltip = 'AI Alt 생성';
-    showToast('이미지를 불러올 수 없습니다');
-    return;
-  }
-
-  showToast(`${imgList.length}개 이미지 AI 분석 요청 중...`);
-
-  // Build single API request with all images as inline base64
-  const parts = [
-    { text: `이메일 뉴스레터에 사용되는 이미지 ${imgList.length}개입니다. 각 이미지에 대해 간결한 한국어 alt 텍스트를 작성해주세요. 20자 이내로 작성하고, 반드시 아래 형식으로만 출력하세요:\n1: alt텍스트\n2: alt텍스트\n...\n다른 설명은 하지 마세요.\n장식용 이미지, 구분선, 단색 배경, 로고, 버튼 등 의미 있는 내용이 없는 이미지는 빈칸으로 작성하세요. 예: 3: ` }
-  ];
-  imgList.forEach(d => {
-    parts.push({ inline_data: { mime_type: d.mime, data: d.data } });
-  });
-
-  try {
-    const reqBody = JSON.stringify({ contents: [{ parts }] });
-    let resp, maxRetries = 5;
-    for (let attempt = 0; attempt < maxRetries; attempt++) {
-      resp = await fetch(_GEMINI_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: reqBody
-      });
-      if (resp.status !== 429) break;
-      const wait = (attempt + 1) * 30;
-      showToast(`요청 제한 초과, ${wait}초 후 재시도... (${attempt + 1}/${maxRetries})`);
-      await new Promise(r => setTimeout(r, wait * 1000));
-    }
-
-    if (!resp.ok) {
-      console.warn('Gemini API error:', resp.status);
-      showToast('AI 요청 실패 (코드: ' + resp.status + ')');
-      btn.disabled = false;
-      btn.dataset.tooltip = 'AI Alt 생성';
-      return;
-    }
-
-    const json = await resp.json();
-    const text = json?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    const lines = text.trim().split('\n');
-    let successCount = 0;
-
-    lines.forEach(line => {
-      const m = line.match(/^(\d+)\s*[:：]\s*(.*)/);
-      if (!m) return;
-      const idx = parseInt(m[1]) - 1;
-      const raw = (m[2] || '').trim().replace(/^["']|["']$/g, '');
-      const alt = raw || ' ';
-      if (idx >= 0 && idx < imgList.length) {
-        imgList[idx].el.setAttribute('alt', alt);
-        successCount++;
-      }
-    });
-
-    showToast(`${successCount}/${imgList.length}개 이미지에 Alt 텍스트 적용 완료`);
-  } catch (e) {
-    console.error('Alt generation error:', e);
-    showToast('AI Alt 생성 중 오류 발생');
-  }
-
-  btn.disabled = false;
-  btn.dataset.tooltip = 'AI Alt 생성';
-}
-
-async function _imgToBase64(url) {
-  try {
-    const resp = await fetch('/api/proxy-image?url=' + encodeURIComponent(url));
-    if (resp.ok) {
-      const json = await resp.json();
-      if (json.ok && json.dataUrl) {
-        const [header, data] = json.dataUrl.split(',');
-        const mime = header.match(/data:(.+);/)?.[1] || 'image/jpeg';
-        return { data, mime };
-      }
-    }
-  } catch {}
-  return null;
-}
 
 // ── Init ─────────────────────────────────────────────────────
 (async function init() {
   await _runMigrationIfNeeded();
 
-  // 가장 최근 히스토리 항목을 우선 로드
-  let histItems = [];
-  try { histItems = await _histDB.getAll(); } catch (e) { console.error(e); }
-  const latestHist = histItems.length > 0 ? histItems[0] : null;
+  // 가장 최근 히스토리 1건만 로드 (전체 로드 대신 속도 개선)
+  let latestHist = null;
+  try { latestHist = await _histDB.getLatest(); } catch (e) { console.error(e); }
 
   let loaded = null; // { source, issueData, html, footerDate, og, historyId }
 
   if (latestHist) {
-    // 히스토리에서 최신 항목 로드
+    // 히스토리에서 최신 항목 로드 (bluehole → bluehall 마이그레이션)
+    if (latestHist.source === 'bluehole') latestHist.source = 'bluehall';
     loaded = {
       source: latestHist.source,
       issueData: latestHist.issueData != null ? latestHist.issueData : (latestHist.issueNumber || ''),
@@ -3167,11 +3166,13 @@ async function _imgToBase64(url) {
     // 히스토리 없으면 드래프트 폴백
     const draft = await _loadDraft();
     if (draft) {
+      // bluehole → bluehall 마이그레이션
+      if (draft.source === 'bluehole') draft.source = 'bluehall';
       const savedIssue = draft.issueData != null ? draft.issueData : (draft.issueNumber || '');
       loaded = {
         source: draft.source,
         issueData: typeof savedIssue === 'object' && savedIssue.key !== undefined
-          ? (draft.source === 'bluehole' ? { year: savedIssue.year, month: savedIssue.month } : savedIssue.number || '')
+          ? (draft.source === 'bluehall' ? { year: savedIssue.year, month: savedIssue.month } : savedIssue.number || '')
           : savedIssue,
         html: draft.html,
         footerDate: draft.footerDate,
@@ -3208,13 +3209,15 @@ async function _imgToBase64(url) {
     }
     syncFooterDateText();
   }
-  wrapImages();
-  wrapTextTDs();
-  setupInsertZones();
-  setupLayoutButtons();
+  try {
+    wrapImages();
+    wrapTextTDs();
+    setupInsertZones();
+    setupLayoutButtons();
+  } catch (e) { console.error('Init wrap/setup error:', e); }
   setEditMode(false);
-  renderTemplateLibrary();
-  renderHistoryList();
+  renderTemplateLibrary().catch(e => console.error('Template lib error:', e));
+  renderHistoryList().catch(e => console.error('History list error:', e));
   _positionBookmark();
   window.addEventListener('resize', _positionBookmark);
 })();
@@ -3287,8 +3290,9 @@ function initFooterDate() {
 }
 
 function isFooterDateComplete() {
-  const m = document.getElementById('fd-month').value;
-  const d = document.getElementById('fd-day').value;
+  if (_currentSourceName === 'bluehall') return true;
+  const m = document.getElementById('fd-month')?.value;
+  const d = document.getElementById('fd-day')?.value;
   return m !== '' && d !== '';
 }
 
@@ -3297,6 +3301,7 @@ function autoFillFooterDate() {
   const yearSel = document.getElementById('fd-year');
   const monthSel = document.getElementById('fd-month');
   const daySel = document.getElementById('fd-day');
+  if (!yearSel || !monthSel || !daySel) return;
   yearSel.value = now.getFullYear();
   monthSel.value = now.getMonth() + 1;
   monthSel.dispatchEvent(new Event('change'));
@@ -3305,9 +3310,13 @@ function autoFillFooterDate() {
 }
 
 function syncFooterDateText() {
-  const y = document.getElementById('fd-year').value;
-  const m = document.getElementById('fd-month').value;
-  const d = document.getElementById('fd-day').value;
+  const yEl = document.getElementById('fd-year');
+  const mEl = document.getElementById('fd-month');
+  const dEl = document.getElementById('fd-day');
+  if (!yEl || !mEl || !dEl) return;
+  const y = yEl.value;
+  const m = mEl.value;
+  const d = dEl.value;
   if (m && d) {
     document.getElementById('footer-date-text').textContent =
       y + '년 ' + String(m).padStart(2, '0') + '월 ' + String(d).padStart(2, '0') + '일 기준, ';
@@ -3800,7 +3809,29 @@ async function _finishEditAndAskHistory() {
       }
     );
   } else {
-    // 중복 없음 → 바로 뷰 모드 전환 후 저장
+    // 중복 없음 → FTP에 동일 HTM 파일 존재 여부 확인
+    let htmName;
+    if (source === 'bluehall') {
+      const yy = issueId.year ? issueId.year.slice(-2) : '00';
+      const mm = issueId.month ? issueId.month.padStart(2, '0') : '00';
+      htmName = 'bluehall_' + yy + mm + '.htm';
+    } else {
+      htmName = 'newsletter' + (issueId.key || '') + '.htm';
+    }
+    try {
+      const res = await fetch(_FTP_API + '/api/ftp/exists', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ remotePath: '/' + htmName })
+      });
+      const data = await res.json();
+      if (data.ok && data.exists) {
+        showConfirmModal('해당 뉴스레터는 이미 발행되었습니다.', () => {}, null, { alertOnly: true });
+        return;
+      }
+    } catch (e) {
+      console.error('FTP HTM 존재 확인 실패:', e);
+    }
     _exitToViewMode();
     await saveToHistory(histName);
     _dismissSidebar();
@@ -3842,7 +3873,7 @@ function startNewNewsletter(type) {
     document.getElementById('deploy-btn').disabled = true;
     _updateTopBar(type, '');
     const wrap = document.getElementById('newsletter-wrap');
-    wrap.innerHTML = (type === 'shout') ? _SHOUT_INITIAL_HTML : _INITIAL_HTML;
+    wrap.innerHTML = (type === 'shout') ? _SHOUT_INITIAL_HTML : (type === 'bluehall') ? _BLUEHALL_INITIAL_HTML : _INITIAL_HTML;
     wrapImages();
     wrapTextTDs();
     setupLayoutButtons();
@@ -3863,9 +3894,9 @@ function toggleEdit() {
     // 호수/년월 미입력 체크
     const issueId = _getIssueIdentifier();
     if (issueId.empty) {
-      const msg = _currentSourceName === 'bluehole' ? '년/월을 입력해주세요.' : '뉴스레터 호수를 입력해주세요.';
+      const msg = _currentSourceName === 'bluehall' ? '년/월을 입력해주세요.' : '뉴스레터 호수를 입력해주세요.';
       showToast(msg, 3000);
-      const focusTarget = _currentSourceName === 'bluehole'
+      const focusTarget = _currentSourceName === 'bluehall'
         ? document.getElementById('issue-date-year')
         : document.getElementById('issue-number');
       if (focusTarget) {
@@ -3889,7 +3920,7 @@ function toggleEdit() {
   setEditMode(true);
 }
 
-function showConfirmModal(msg, onYes, onNo) {
+function showConfirmModal(msg, onYes, onNo, opts) {
   const bg = document.getElementById('confirm-modal-bg');
   const body = document.getElementById('confirm-modal-body');
   body.innerHTML = msg.replace(/\n/g, '<br>');
@@ -3898,9 +3929,12 @@ function showConfirmModal(msg, onYes, onNo) {
   requestAnimationFrame(() => requestAnimationFrame(() => bg.classList.add('open')));
   const yesBtn = document.getElementById('confirm-yes');
   const noBtn = document.getElementById('confirm-no');
+  const alertOnly = opts && opts.alertOnly;
+  noBtn.style.display = alertOnly ? 'none' : '';
+  yesBtn.textContent = alertOnly ? '확인' : '예';
   function cleanup() {
     bg.classList.remove('open');
-    setTimeout(() => { bg.style.display = 'none'; }, 300);
+    setTimeout(() => { bg.style.display = 'none'; noBtn.style.display = ''; yesBtn.textContent = '예'; }, 300);
     yesBtn.removeEventListener('click', handleYes);
     noBtn.removeEventListener('click', handleNo);
   }
@@ -3964,156 +3998,6 @@ function showPromptModal(msg, defaultVal, onOk, onCancel) {
   setTimeout(() => { input.focus(); input.select(); }, 50);
 }
 
-// ── Gemini AI Folder Name Suggestion ─────────────────────────
-const GEMINI_KEY_STORAGE = 'pentanews_gemini_key';
-if (!localStorage.getItem(GEMINI_KEY_STORAGE)) {
-  localStorage.setItem(GEMINI_KEY_STORAGE, 'AIzaSyDUqr4xA0AbBsaIO76Sli2HzKznez_OAPI');
-}
-
-function _getGeminiKey() {
-  return localStorage.getItem(GEMINI_KEY_STORAGE) || '';
-}
-
-function _setGeminiKey(key) {
-  localStorage.setItem(GEMINI_KEY_STORAGE, key);
-}
-
-function requestGeminiKey(onDone) {
-  showPromptModal(
-    'Gemini API 키를 입력하세요.\n<a href="https://aistudio.google.com/apikey" target="_blank" style="color:#6366f1;font-size:11px">Google AI Studio에서 무료 발급 →</a>',
-    _getGeminiKey(),
-    key => {
-      if (key && key.trim()) {
-        _setGeminiKey(key.trim());
-        onDone(key.trim());
-      }
-    }
-  );
-}
-
-function _localSuggest(existingNames) {
-  if (existingNames.length !== 0) return [];
-  const results = [];
-  const usedNames = new Set(existingNames);
-
-  // 1. 숫자 패턴 그룹 분석: "567호", "제12호", "Vol.3" 등
-  const parsed = existingNames.map(name => {
-    const m = name.match(/^(.*?)(\d+)(.*?)$/);
-    return m ? { prefix: m[1], num: parseInt(m[2], 10), suffix: m[3], original: name } : null;
-  }).filter(Boolean);
-
-  if (parsed.length > 0) {
-    // 패턴별로 그룹화
-    const patterns = {};
-    parsed.forEach(p => {
-      const key = p.prefix + '|' + p.suffix;
-      if (!patterns[key]) patterns[key] = { prefix: p.prefix, suffix: p.suffix, nums: [] };
-      patterns[key].nums.push(p.num);
-    });
-
-    // 각 패턴 그룹에서 다음 번호 추천
-    const groups = Object.values(patterns).sort((a, b) => b.nums.length - a.nums.length);
-    groups.forEach(g => {
-      g.nums.sort((a, b) => a - b);
-      // 증분 패턴 감지 (연속 차이의 최빈값)
-      let step = 1;
-      if (g.nums.length >= 2) {
-        const diffs = {};
-        for (let i = 1; i < g.nums.length; i++) {
-          const d = g.nums[i] - g.nums[i - 1];
-          if (d > 0) diffs[d] = (diffs[d] || 0) + 1;
-        }
-        const sorted = Object.entries(diffs).sort((a, b) => b[1] - a[1]);
-        if (sorted.length > 0) step = parseInt(sorted[0][0], 10);
-      }
-      const maxNum = Math.max(...g.nums);
-      const candidate = g.prefix + (maxNum + step) + g.suffix;
-      if (!usedNames.has(candidate)) results.push(candidate);
-    });
-
-    // 빈 번호(gap) 추천: 연속이어야 하는데 빠진 번호
-    const main = groups[0];
-    if (main && main.nums.length >= 2) {
-      const min = Math.min(...main.nums);
-      const max = Math.max(...main.nums);
-      for (let n = min + 1; n < max && results.length < 3; n++) {
-        if (!main.nums.includes(n)) {
-          const candidate = main.prefix + n + main.suffix;
-          if (!usedNames.has(candidate) && !results.includes(candidate)) {
-            results.push(candidate);
-          }
-        }
-      }
-    }
-
-    // 최소 3개 보장: 주 패턴에서 연속 번호 추가
-    if (results.length < 3 && groups.length > 0) {
-      const g = groups[0];
-      let step = 1;
-      if (g.nums.length >= 2) {
-        const diffs = {};
-        for (let i = 1; i < g.nums.length; i++) {
-          const d = g.nums[i] - g.nums[i - 1];
-          if (d > 0) diffs[d] = (diffs[d] || 0) + 1;
-        }
-        const sorted = Object.entries(diffs).sort((a, b) => b[1] - a[1]);
-        if (sorted.length > 0) step = parseInt(sorted[0][0], 10);
-      }
-      let next = Math.max(...g.nums) + step;
-      while (results.length < 3) {
-        const candidate = g.prefix + next + g.suffix;
-        if (!usedNames.has(candidate) && !results.includes(candidate)) {
-          results.push(candidate);
-        }
-        next += step;
-      }
-    }
-  }
-
-  return results.slice(0, 3);
-}
-
-function suggestFolderNames(existingNames, onResult) {
-  const key = _getGeminiKey();
-
-  // AI 추천 시도, 실패 시 로컬 폴백
-  if (!key) {
-    onResult(_localSuggest(existingNames), null);
-    return;
-  }
-
-  const prompt = existingNames.length === 0
-    ? '뉴스레터 이미지 폴더 이름을 3개 추천해줘. 예시: "570호", "2024년 3월호". JSON 배열로만 응답해. 예: ["이름1","이름2","이름3"]'
-    : '기존 폴더 이름 목록: ' + JSON.stringify(existingNames) + '\n이 패턴을 분석해서 다음에 올 폴더 이름 3개를 추천해줘. JSON 배열로만 응답해. 예: ["이름1","이름2","이름3"]';
-
-  fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(key), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.3, maxOutputTokens: 100 }
-    })
-  })
-  .then(res => {
-    if (!res.ok) throw new Error(res.status);
-    return res.json();
-  })
-  .then(data => {
-    if (data.error) throw new Error(data.error.message);
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    const match = text.match(/\[[\s\S]*?\]/);
-    if (match) {
-      const names = JSON.parse(match[0]).filter(n => typeof n === 'string' && n.trim());
-      onResult(names.slice(0, 3), null);
-    } else {
-      throw new Error('parse');
-    }
-  })
-  .catch(() => {
-    // API 실패 → 로컬 패턴 분석으로 폴백
-    onResult(_localSuggest(existingNames), null);
-  });
-}
 
 // ── File Picker ───────────────────────────────────────────────
 function openFilePicker(cb) {
@@ -4152,6 +4036,7 @@ function openModal(td) {
 
 function closeModal() {
   document.getElementById('modal-bg').classList.remove('open');
+  document.getElementById('modal').style.width = '';
   currentTd = null;
 }
 
@@ -5200,8 +5085,8 @@ function insertArea(insertZoneTr, type) {
   const isBanner = _isInsertZoneInBanner(insertZoneTr);
   const pad = _currentSourceName === 'shout' ? 65 : 24;
 
-  // 위쪽에 기존 콘텐츠가 있으면 스페이서 삽입 (이미지 30px, 텍스트 16px)
-  const spacerH = type === 'text' ? 16 : 30;
+  // 위쪽에 기존 콘텐츠가 있으면 스페이서 삽입 (이미지: bluehall 40px / 기본 30px, 텍스트 16px)
+  const spacerH = type === 'text' ? 16 : (_currentSourceName === 'bluehall' ? 40 : 30);
   const hasPrevContent = _hasPrevContent(insertZoneTr);
 
   if (type === 'image') {
@@ -5440,11 +5325,7 @@ function _exportImagesAsZip(imgs, dateStr, folderName, randomName, getExtAndBlob
   });
 }
 
-function saveHTML() {
-  if (!isFooterDateComplete()) {
-    showToast('발송 날짜(월, 일)를 선택해주세요.');
-    return;
-  }
+function _buildExportHTML() {
   const clone = document.getElementById('newsletter-wrap').cloneNode(true);
 
   // Remove editor UI
@@ -5511,13 +5392,13 @@ function saveHTML() {
   const issueSuffix = !issueId.empty ? ' ' + issueId.display : '';
   const titleText = typeUpper + issueSuffix;
   const ogTitle = '[' + titleText + ']';
-  let dlName;
-  if (_currentSourceName === 'bluehole') {
-    dlName = !issueId.empty ? 'bluehole_' + issueId.year + issueId.month + '_edited.htm' : 'bluehole_edited.htm';
-  } else if (_currentSourceName === 'pentaprism') {
-    dlName = !issueId.empty ? 'newsletter' + issueId.number + '_edited.htm' : 'newsletter_edited.htm';
+  let fileName;
+  if (_currentSourceName === 'bluehall') {
+    const yy = issueId.year ? issueId.year.slice(-2) : '00';
+    const mm = issueId.month ? issueId.month.padStart(2, '0') : '00';
+    fileName = !issueId.empty ? 'bluehall_' + yy + mm + '.htm' : 'bluehall.htm';
   } else {
-    dlName = !issueId.empty ? _currentSourceName + issueId.number + '_edited.htm' : _currentSourceName + '_edited.htm';
+    fileName = !issueId.empty ? 'newsletter' + (issueId.number || '') + '.htm' : 'newsletter.htm';
   }
 
   const head = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -5532,25 +5413,45 @@ function saveHTML() {
     <meta property="og:description" content="${(_ogData.description || '').replace(/"/g, '&quot;')}" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="PENTABREED" />
-    ${_ogData.imageDataUrl ? `<meta property="og:image" content="${_ogData.imageDataUrl}" />` : '<!-- og:image: 이미지 미설정 -->'}
+    ${(_ogData.imageDataUrl && !_ogData.imageDataUrl.startsWith('data:')) ? `<meta property="og:image" content="${_ogData.imageDataUrl}" />` : '<!-- og:image: 배포 시 자동 업로드됩니다 -->'}
     <meta property="og:url" content="${(_ogData.url || 'https://shout.co.kr/').replace(/"/g, '&quot;')}" />
     <!-- // Facebook 노출정보 -->
 </head>
 <body style="padding: 0;margin: 0">`;
 
-  const finalHTML = head + '\n' + clone.innerHTML + '\n</body>\n</html>';
+  return { html: head + '\n' + clone.innerHTML + '\n</body>\n</html>', fileName };
+}
 
-  const blob = new Blob([finalHTML], { type: 'text/html;charset=utf-8' });
+function saveHTML() {
+  if (!isFooterDateComplete()) {
+    showToast('발송 날짜(월, 일)를 선택해주세요.');
+    return;
+  }
+  const { html, fileName } = _buildExportHTML();
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
-  a.href = url; a.download = dlName;
+  a.href = url; a.download = fileName;
   document.body.appendChild(a); a.click();
   document.body.removeChild(a); URL.revokeObjectURL(url);
+  showToast(fileName + ' 저장 완료!');
+}
 
-  showToast(dlName + ' 저장 완료!');
+function copyHTML() {
+  if (!isFooterDateComplete()) {
+    showToast('발송 날짜(월, 일)를 선택해주세요.');
+    return;
+  }
+  const { html } = _buildExportHTML();
+  navigator.clipboard.writeText(html).then(() => {
+    showToast('HTM 코드가 클립보드에 복사되었습니다.');
+  }).catch(() => {
+    showToast('복사에 실패했습니다.');
+  });
 }
 
 const _FTP_API = 'http://localhost:3900';
+let _deployModalPath = '';
 
 function deployNewsletter() {
   if (editMode) { showToast('편집 모드를 종료한 후 배포해주세요.'); return; }
@@ -5561,156 +5462,78 @@ function deployNewsletter() {
   let defaultPath;
   if (issueId.empty) {
     defaultPath = localStorage.getItem('pentanews_ftp_path') || '/images/';
-  } else if (_currentSourceName === 'bluehole') {
+  } else if (_currentSourceName === 'bluehall') {
     const yy = issueId.year.slice(-2);
     const mm = issueId.month.padStart(2, '0');
     defaultPath = '/images/bluehall/' + yy + mm + '/';
   } else {
     defaultPath = '/images/' + issueId.key + '/';
   }
-  _showDeployModal(defaultPath);
+  _deployModalPath = defaultPath;
+  _showDeployModal();
 }
 
-function _showDeployModal(defaultPath) {
+function _showDeployModal() {
   const bg = document.getElementById('modal-bg');
   const modal = document.getElementById('modal');
+  const issueId = _getIssueIdentifier();
+  const typeLabel = _TYPE_LABELS[_currentSourceName] || _currentSourceName;
+  const issueDisplay = issueId.display || '';
+  modal.style.width = '320px';
   modal.innerHTML = `
-    <div class="glass-modal-head">
-      <span class="glass-modal-title">FTP 배포</span>
+    <div class="glass-modal-head" style="padding:14px 18px 0;">
+      <span class="glass-modal-title">배포</span>
       <button class="glass-modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div style="padding:20px;font-size:13px;">
-      <label style="display:block;margin-bottom:6px;font-weight:600;color:#4f46e5;">업로드 경로</label>
-      <input type="text" id="deploy-path" value="${defaultPath}"
-        style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;box-sizing:border-box;" />
-      <p style="margin:8px 0 0;font-size:11px;color:#9ca3af;">호수에 따라 자동 설정됩니다. 필요 시 직접 수정 가능.</p>
-      <div style="display:flex;gap:8px;margin-top:16px;">
-        <button id="deploy-test-btn" onclick="_deployTestConnection()"
-          style="flex:1;padding:8px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:12px;cursor:pointer;">
-          연결 테스트
-        </button>
+    <div style="padding:12px 18px 14px;font-size:13px;">
+      <div id="deploy-confirm" style="text-align:center;padding:2px 0;">
+        <div style="font-size:14px;font-weight:700;color:#1e1b4b;margin-bottom:2px;">${typeLabel} ${issueDisplay}</div>
+        <div style="font-size:13px;color:#6b7280;">배포하시겠습니까?</div>
+      </div>
+      <div id="deploy-progress-wrap" style="display:none;margin-bottom:10px;">
+        <div style="width:100%;height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;">
+          <div id="deploy-progress-bar" style="width:0%;height:100%;background:linear-gradient(90deg,#6366f1,#4f46e5);border-radius:3px;transition:width .4s ease;"></div>
+        </div>
+      </div>
+      <div id="deploy-status" style="font-size:12px;color:#6b7280;min-height:0;"></div>
+      <div id="deploy-result" style="display:none;margin-top:10px;padding:10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;">
+        <div style="font-size:13px;font-weight:600;color:#16a34a;margin-bottom:4px;">배포가 완료되었습니다.</div>
+        <a id="deploy-result-link" href="#" target="_blank" style="font-size:12px;color:#4f46e5;word-break:break-all;"></a>
+      </div>
+      <div style="margin-top:12px;">
         <button id="deploy-start-btn" onclick="_deployStart()"
-          style="flex:1;padding:8px;border:none;border-radius:8px;background:#4f46e5;color:#fff;font-size:12px;font-weight:700;cursor:pointer;">
+          style="width:100%;padding:9px;border:none;border-radius:8px;background:#4f46e5;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">
           배포 시작
         </button>
       </div>
-      <div id="deploy-status" style="margin-top:12px;font-size:12px;color:#6b7280;min-height:20px;"></div>
     </div>
   `;
   bg.classList.add('open');
 }
 
-async function _deployTestConnection() {
-  const status = document.getElementById('deploy-status');
-  status.textContent = 'FTP 연결 중...';
-  status.style.color = '#6b7280';
-  try {
-    const res = await fetch(_FTP_API + '/api/ftp/status');
-    const data = await res.json();
-    if (data.ok) {
-      status.textContent = '✓ FTP 연결 성공';
-      status.style.color = '#16a34a';
-    } else {
-      status.textContent = '✗ ' + data.message;
-      status.style.color = '#dc2626';
-    }
-  } catch (e) {
-    status.textContent = '✗ 서버에 연결할 수 없습니다. (npm start 실행 확인)';
-    status.style.color = '#dc2626';
-  }
-}
-
 async function _deployStart() {
-  const pathInput = document.getElementById('deploy-path');
   const status = document.getElementById('deploy-status');
   const btn = document.getElementById('deploy-start-btn');
-  const remotePath = pathInput.value.trim();
+  const progressWrap = document.getElementById('deploy-progress-wrap');
+  const progressBar = document.getElementById('deploy-progress-bar');
+  const resultWrap = document.getElementById('deploy-result');
+  const resultLink = document.getElementById('deploy-result-link');
+  const remotePath = _deployModalPath;
 
-  if (!remotePath) { status.textContent = '업로드 경로를 입력해주세요.'; status.style.color = '#dc2626'; return; }
+  const confirmWrap = document.getElementById('deploy-confirm');
 
-  localStorage.setItem('pentanews_ftp_path', remotePath);
   btn.disabled = true;
-  btn.textContent = '업로드 중...';
+  btn.textContent = '배포 중...';
   status.style.color = '#6b7280';
+  confirmWrap.style.display = 'none';
+  progressWrap.style.display = 'block';
+  progressBar.style.width = '10%';
 
   try {
-    // 1) 이미지 수집
-    const wrap = document.getElementById('newsletter-wrap');
-    const imgs = Array.from(wrap.querySelectorAll('img')).filter(img => {
-      const src = img.getAttribute('src');
-      return src && src.length > 0 && (src.startsWith('data:') || src.startsWith('http'));
-    });
-    const ogImg = document.getElementById('og-image');
-    if (ogImg && ogImg.src && ogImg.style.display !== 'none') imgs.push(ogImg);
+    status.textContent = 'HTM 생성 중...';
+    progressBar.style.width = '30%';
 
-    if (imgs.length === 0) {
-      status.textContent = '업로드할 이미지가 없습니다.';
-      status.style.color = '#dc2626';
-      btn.disabled = false; btn.textContent = '배포 시작';
-      return;
-    }
-
-    status.textContent = '이미지 변환 중... (0/' + imgs.length + ')';
-
-    const now = new Date();
-    const dateStr = String(now.getFullYear()) + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0');
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const usedNames = new Set();
-    function randomName() {
-      let name;
-      do {
-        let rand = '';
-        for (let i = 0; i < 6; i++) rand += chars[Math.floor(Math.random() * chars.length)];
-        name = dateStr + rand;
-      } while (usedNames.has(name));
-      usedNames.add(name);
-      return name;
-    }
-
-    // 이미지 → base64 dataUrl 배열 + 원본 img 매핑
-    const files = [];
-    const imgMap = []; // { imgEl, fileName } 매핑
-    for (let i = 0; i < imgs.length; i++) {
-      const img = imgs[i];
-      status.textContent = '이미지 변환 중... (' + (i + 1) + '/' + imgs.length + ')';
-      try {
-        let fileName, dataUrl;
-        if (img.src.startsWith('data:')) {
-          const mime = img.src.match(/^data:(image\/\w+);/);
-          const ext = mime ? mime[1].split('/')[1].replace('jpeg', 'jpg') : 'png';
-          fileName = randomName() + '.' + ext;
-          dataUrl = img.src;
-        } else {
-          // 외부 URL: 서버 프록시로 base64 변환 (CORS 우회)
-          const resp = await fetch(_FTP_API + '/api/proxy-image?url=' + encodeURIComponent(img.src));
-          const pdata = await resp.json();
-          if (!pdata.ok) throw new Error(pdata.message);
-          const mime = pdata.dataUrl.match(/^data:(image\/\w+);/);
-          const ext = mime ? mime[1].split('/')[1].replace('jpeg', 'jpg') : 'png';
-          fileName = randomName() + '.' + ext;
-          dataUrl = pdata.dataUrl;
-        }
-        files.push({ name: fileName, dataUrl });
-        imgMap.push({ imgEl: img, fileName });
-      } catch (e) {
-        console.error('이미지 변환 실패:', img.src, e);
-      }
-    }
-
-    // 2) FTP 이미지 업로드
-    status.textContent = 'FTP 이미지 업로드 중... (' + files.length + '개)';
-    const res = await fetch(_FTP_API + '/api/ftp/upload', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ remotePath, files })
-    });
-    const data = await res.json();
-    if (!data.ok) throw new Error(data.message);
-
-    status.textContent = '✓ 이미지 ' + data.uploaded + '개 업로드 완료. HTM 생성 중...';
-
-    // 3) HTML 생성: img src를 FTP URL로 치환
-    const FTP_BASE_URL = 'https://shout.co.kr';
+    // HTML 생성 (이미지는 이미 FTP URL이 반영된 상태)
     const htmlClone = document.getElementById('newsletter-wrap').cloneNode(true);
     // 에디터 UI 요소 제거 (_cleanClone 로직 재사용)
     // 날짜 드롭다운 → 텍스트로 치환
@@ -5805,34 +5628,38 @@ async function _deployStart() {
       span.appendChild(img);
     });
 
-    // img src 치환: 원본 img 요소의 src → FTP URL
-    const cloneImgs = htmlClone.querySelectorAll('img');
-    const wrapImgs = document.getElementById('newsletter-wrap').querySelectorAll('img');
-    imgMap.forEach(({ imgEl, fileName }) => {
-      const ftpUrl = FTP_BASE_URL + remotePath.replace(/\/$/, '') + '/' + fileName;
-      // wrap 내 원본 img의 인덱스를 찾아 clone에서 동일 위치의 img를 치환
-      const idx = Array.from(wrapImgs).indexOf(imgEl);
-      if (idx >= 0 && cloneImgs[idx]) {
-        cloneImgs[idx].setAttribute('src', ftpUrl);
+    // OG 이미지를 FTP에 업로드하여 절대 URL로 변환
+    let ogImageUrl = '';
+    if (_ogData.imageDataUrl && _ogData.imageDataUrl.startsWith('data:')) {
+      try {
+        status.textContent = 'OG 이미지 업로드 중...';
+        progressBar.style.width = '50%';
+        const ogFileName = 'og_thumbnail.jpg';
+        const ogRes = await fetch(_FTP_API + '/api/ftp/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ remotePath: remotePath, files: [{ name: ogFileName, dataUrl: _ogData.imageDataUrl }] })
+        });
+        const ogData = await ogRes.json();
+        if (ogData.ok) ogImageUrl = 'https://shout.co.kr' + remotePath + ogFileName;
+      } catch (e) {
+        console.warn('OG image upload failed:', e);
       }
-      // OG 이미지인 경우 (wrap 밖)
-      if (imgEl.id === 'og-image') {
-        // OG meta에 반영됨 (아래 head 생성에서 처리)
-        _ogData = { ..._ogData, imageDataUrl: ftpUrl };
-      }
-    });
+    } else if (_ogData.imageDataUrl) {
+      ogImageUrl = _ogData.imageDataUrl;
+    }
 
     // HTM 전체 조립
     const issueId = _getIssueIdentifier();
     const typeUpper = _TYPE_UPPERS[_currentSourceName] || 'PENTAPRISM';
     const issueSuffix = !issueId.empty ? ' ' + issueId.display : '';
     const ogTitle = '[' + typeUpper + issueSuffix + ']';
-    const head = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n<html xmlns="https://www.w3.org/1999/xhtml">\n<head>\n<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n<meta name="viewport" content="width=720" />\n<link rel="icon" type="image/png" href="/favicon.png">\n<title>${ogTitle}</title>\n<!-- Facebook 노출정보 -->\n<meta property="og:title" content="${(_ogData.title || ogTitle).replace(/"/g, '&quot;')}" />\n<meta property="og:description" content="${(_ogData.description || '').replace(/"/g, '&quot;')}" />\n<meta property="og:type" content="website" />\n<meta property="og:site_name" content="PENTABREED" />\n${_ogData.imageDataUrl ? '<meta property="og:image" content="' + _ogData.imageDataUrl + '" />' : '<!-- og:image: 이미지 미설정 -->'}\n<meta property="og:url" content="${(_ogData.url || 'https://shout.co.kr/').replace(/"/g, '&quot;')}" />\n<!-- // Facebook 노출정보 -->\n</head>\n<body style="padding: 0;margin: 0">`;
+    const head = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n<html xmlns="https://www.w3.org/1999/xhtml">\n<head>\n<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n<meta name="viewport" content="width=720" />\n<link rel="icon" type="image/png" href="/favicon.png">\n<title>${ogTitle}</title>\n<!-- Facebook 노출정보 -->\n<meta property="og:title" content="${(_ogData.title || ogTitle).replace(/"/g, '&quot;')}" />\n<meta property="og:description" content="${(_ogData.description || '').replace(/"/g, '&quot;')}" />\n<meta property="og:type" content="website" />\n<meta property="og:site_name" content="PENTABREED" />\n${ogImageUrl ? '<meta property="og:image" content="' + ogImageUrl + '" />' : '<!-- og:image: 이미지 미설정 -->'}\n<meta property="og:url" content="${(_ogData.url || 'https://shout.co.kr/').replace(/"/g, '&quot;')}" />\n<!-- // Facebook 노출정보 -->\n</head>\n<body style="padding: 0;margin: 0">`;
     const finalHTML = head + '\n' + htmlClone.innerHTML + '\n</body>\n</html>';
 
     // HTM 파일명 결정
     let htmName;
-    if (_currentSourceName === 'bluehole') {
+    if (_currentSourceName === 'bluehall') {
       const yy = issueId.year ? issueId.year.slice(-2) : '00';
       const mm = issueId.month ? issueId.month.padStart(2, '0') : '00';
       htmName = 'bluehall_' + yy + mm + '.htm';
@@ -5841,6 +5668,7 @@ async function _deployStart() {
     }
 
     // 4) FTP HTM 업로드 (루트 경로)
+    progressBar.style.width = '60%';
     status.textContent = 'HTM 업로드 중... (' + htmName + ')';
     const htmRes = await fetch(_FTP_API + '/api/ftp/upload-html', {
       method: 'POST',
@@ -5850,13 +5678,21 @@ async function _deployStart() {
     const htmData = await htmRes.json();
     if (!htmData.ok) throw new Error(htmData.message);
 
-    status.textContent = '✓ 이미지 ' + data.uploaded + '개 + ' + htmName + ' 배포 완료!';
-    status.style.color = '#16a34a';
+    progressBar.style.width = '100%';
+    status.textContent = '';
+    const deployUrl = 'https://shout.co.kr/' + htmName;
+    resultLink.textContent = deployUrl;
+    resultLink.href = deployUrl;
+    resultWrap.style.display = 'block';
     btn.textContent = '완료';
-    showToast('FTP 배포 완료! (이미지 ' + data.uploaded + '개 + ' + htmName + ')');
+    btn.onclick = () => closeModal();
+    btn.disabled = false;
+    showToast('배포 완료! (' + htmName + ')');
 
   } catch (e) {
     console.error('배포 실패:', e);
+    progressBar.style.width = '0%';
+    progressWrap.style.display = 'none';
     status.textContent = '✗ ' + e.message;
     status.style.color = '#dc2626';
     btn.disabled = false; btn.textContent = '배포 시작';
@@ -5948,6 +5784,7 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
         createdAt: f.created_at,
         source: f.source || 'pentaprism',
         issueKey: f.issue_key || '',
+        ftpPath: f.ftp_path || '',
         images: (itemsData || []).filter(i => i.folder_id === f.id).map(i => ({
           id: i.id, name: i.name, dataUrl: i.public_url
         }))
@@ -5963,7 +5800,7 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
     const sb = _getSb();
     if (!sb) return;
     try {
-      await sb.from('image_folders').upsert({ id: folder.id, name: folder.name, created_at: folder.createdAt, source: folder.source || 'pentaprism', issue_key: folder.issueKey || '' });
+      await sb.from('image_folders').upsert({ id: folder.id, name: folder.name, created_at: folder.createdAt, source: folder.source || 'pentaprism', issue_key: folder.issueKey || '', ftp_path: folder.ftpPath || '' });
     } catch (e) { console.error('Supabase folder create failed:', e); }
   }
 
@@ -5986,7 +5823,7 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
   const _FTP_BASE = 'https://shout.co.kr';
 
   function _getFtpRemotePath(folder) {
-    if (folder.source === 'bluehole') return '/images/bluehall/' + folder.issueKey + '/';
+    if (folder.source === 'bluehall') return '/images/bluehall/' + folder.issueKey + '/';
     return '/images/' + folder.issueKey + '/';
   }
 
@@ -6090,78 +5927,128 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
   }
 
   // ── Folder CRUD ──────────────────────────────────────────────
-  function _doCreateFolder(name, source, issueKey) {
+  async function _doCreateFolder(name, source, issueKey) {
     if (!name || !name.trim()) return;
     const trimmed = name.trim();
     if (folders.some(f => f.name === trimmed)) {
-      showConfirmModal('"' + trimmed + '" 폴더가 이미 존재합니다.\n다른 이름을 사용해주세요.', () => { createFolder(); });
+      showConfirmModal('"' + trimmed + '" 폴더가 이미 존재합니다.', () => { createFolder(); });
       return;
     }
+    // FTP 경로 계산
+    let ftpPath = '';
+    const src = source || _currentSourceName || 'pentaprism';
+    const ik = issueKey || '';
+    if (ik) {
+      if (src === 'bluehall') {
+        const parts = ik.split('-');
+        ftpPath = '/images/bluehall/' + (parts[0] || '').slice(-2) + (parts[1] || '').padStart(2, '0');
+      } else {
+        ftpPath = '/images/' + ik;
+      }
+    }
+
+    // FTP 폴더 존재 여부 확인
+    if (ftpPath) {
+      try {
+        const res = await fetch(_FTP_API + '/api/ftp/exists', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ remotePath: ftpPath })
+        });
+        const data = await res.json();
+        if (data.ok && data.exists) {
+          showConfirmModal('해당 폴더명을 사용할 수 없습니다.', () => { createFolder(); });
+          return;
+        }
+      } catch (e) {
+        console.error('FTP 존재 확인 실패:', e);
+      }
+    }
+
     const folder = {
       id: 'folder-' + (++folderIdCounter),
       name: trimmed,
       createdAt: Date.now(),
       images: [],
-      source: source || 'pentaprism',
-      issueKey: issueKey || ''
+      source: src,
+      issueKey: ik,
+      ftpPath: ftpPath
     };
     folders.unshift(folder);
     _saveLibToStorageLocal();
     _sbCreateFolder(folder);
+
+    // FTP에 빈 폴더 생성
+    if (ftpPath) {
+      fetch(_FTP_API + '/api/ftp/mkdir', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ remotePath: ftpPath })
+      }).catch(e => console.error('FTP 폴더 생성 실패:', e));
+    }
+
     renderFolderList();
+    openFolder(folder.id);
     showToast('"' + folder.name + '" 폴더 생성');
   }
 
   function createFolder() {
-    const suggestArea = document.getElementById('prompt-suggest');
-    const chipsEl     = document.getElementById('prompt-suggest-chips');
-    const labelEl     = document.getElementById('prompt-suggest-label');
-
     // 종류/호수 선택 + 폴더 이름 입력 UI
-    const typeOptions = Object.entries(_TYPE_LABELS).map(([k, v]) =>
-      '<option value="' + k + '">' + v + '</option>'
-    ).join('');
-
     showPromptModal(
-      '<div style="display:flex;flex-direction:column;gap:10px">' +
-        '<div style="display:flex;gap:8px;align-items:center">' +
-          '<label style="min-width:70px;font-size:13px;color:#94a3b8">뉴스레터</label>' +
-          '<select id="cf-source" style="flex:1;padding:7px 10px;border-radius:8px;border:1px solid rgba(99,102,241,0.25);background:#1e293b;color:#e2e8f0;font-size:14px">' + typeOptions + '</select>' +
+      '<div style="display:flex;flex-direction:column;gap:16px">' +
+        '<div>' +
+          '<label style="display:block;font-size:12px;font-weight:600;color:#94a3b8;margin-bottom:8px;letter-spacing:0.5px;text-transform:uppercase">뉴스레터</label>' +
+          '<div id="cf-source-chips" class="source-chips"></div>' +
         '</div>' +
-        '<div style="display:flex;gap:8px;align-items:center">' +
-          '<label id="cf-issue-label" style="min-width:70px;font-size:13px;color:#94a3b8">호수</label>' +
-          '<input id="cf-issue" type="text" placeholder="예: 569" style="flex:1;padding:7px 10px;border-radius:8px;border:1px solid rgba(99,102,241,0.25);background:#1e293b;color:#e2e8f0;font-size:14px" />' +
+        '<div>' +
+          '<label id="cf-issue-label" style="display:block;font-size:12px;font-weight:600;color:#94a3b8;margin-bottom:8px;letter-spacing:0.5px;text-transform:uppercase">호수</label>' +
+          '<input id="cf-issue" type="text" placeholder="예: 569" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,\'\')" style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid rgba(99,102,241,0.2);background:rgba(99,102,241,0.04);color:#1e293b;font-size:14px;outline:none;transition:border-color .15s;box-sizing:border-box;" onfocus="this.style.borderColor=\'#6366f1\'" onblur="this.style.borderColor=\'rgba(99,102,241,0.2)\'" />' +
         '</div>' +
       '</div>',
       '', name => {
-        suggestArea.style.display = 'none';
-        const sourceEl = document.getElementById('cf-source');
         const issueEl = document.getElementById('cf-issue');
-        const source = sourceEl ? sourceEl.value : 'pentaprism';
+        const source = _getActiveSource('cf-source-chips');
         const issueKey = issueEl ? issueEl.value.trim() : '';
-        _doCreateFolder(name, source, issueKey);
+        const sourceLabel = _TYPE_LABELS[source] || source;
+        const metaText = sourceLabel + ' · 0개 이미지';
+        showConfirmModal(
+          '아래 정보로 폴더를 생성하시겠습니까?' +
+          '<div style="padding:8px 0 0">' +
+            '<div class="il-folder-item" style="pointer-events:none;margin:0">' +
+              '<div class="il-folder-icon"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>' +
+              '<div class="il-folder-info">' +
+                '<div class="il-folder-name">' + name + '</div>' +
+                '<div class="il-folder-meta">' + metaText + '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>',
+          () => { _doCreateFolder(name, source, issueKey); }
+        );
       }
     );
 
-    // prompt-modal-input 숨기고, 종류/호수 변경 시 자동 생성
+    // 모달 타이틀 변경 + prompt-modal-input 숨기기
+    document.getElementById('prompt-modal-title').textContent = '이미지 폴더 생성';
     setTimeout(() => {
-      const sourceEl = document.getElementById('cf-source');
+      _renderSourceChips('cf-source-chips', _currentSourceName || 'pentaprism');
+      const chipsContainer = document.getElementById('cf-source-chips');
       const issueEl = document.getElementById('cf-issue');
       const issueLabel = document.getElementById('cf-issue-label');
       const input = document.getElementById('prompt-modal-input');
       if (input) input.style.display = 'none';
 
       function updateFolderName() {
-        const src = sourceEl.value;
+        const src = _getActiveSource('cf-source-chips');
         const issue = issueEl.value.trim();
         if (!issue) { input.value = ''; return; }
         const label = _TYPE_LABELS[src] || src;
-        input.value = src === 'bluehole' ? label + ' ' + issue : label + ' ' + issue + '호';
+        input.value = src === 'bluehall' ? label + ' ' + issue : label + ' ' + issue + '호';
       }
 
       function updateIssueLabel() {
-        if (sourceEl.value === 'bluehole') {
-          issueLabel.textContent = '년월';
+        const src = _getActiveSource('cf-source-chips');
+        if (src === 'bluehall') {
+          issueLabel.textContent = '년/월';
           issueEl.placeholder = '예: 2603';
         } else {
           issueLabel.textContent = '호수';
@@ -6169,45 +6056,17 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
         }
       }
 
-      if (sourceEl && issueEl && input) {
-        sourceEl.addEventListener('change', () => { updateIssueLabel(); updateFolderName(); });
+      if (chipsContainer && issueEl && input) {
+        chipsContainer.addEventListener('source-change', () => { updateIssueLabel(); updateFolderName(); });
         issueEl.addEventListener('input', updateFolderName);
+        issueEl.addEventListener('keydown', e => {
+          if (e.key === 'Enter') { e.preventDefault(); document.getElementById('prompt-yes').click(); }
+        });
         updateIssueLabel();
         issueEl.focus();
       }
     }, 50);
 
-    // AI 추천 표시
-    suggestArea.style.display = 'block';
-    chipsEl.innerHTML = '<span class="suggest-loading">추천 생성 중…</span>';
-    labelEl.textContent = 'AI 추천';
-
-    const existingNames = folders.map(f => f.name);
-    suggestFolderNames(existingNames, suggestions => {
-      chipsEl.innerHTML = '';
-      if (suggestions.length === 0) {
-        suggestArea.style.display = 'none';
-        return;
-      }
-      suggestions.forEach(s => {
-        const chip = document.createElement('button');
-        chip.className = 'suggest-chip';
-        chip.textContent = s;
-        chip.addEventListener('click', () => {
-          // 모달 닫기
-          const bg = document.getElementById('prompt-modal-bg');
-          bg.classList.remove('open');
-          setTimeout(() => { bg.style.display = 'none'; }, 300);
-          suggestArea.style.display = 'none';
-          const sourceEl = document.getElementById('cf-source');
-          const issueEl = document.getElementById('cf-issue');
-          const source = sourceEl ? sourceEl.value : 'pentaprism';
-          const issueKey = issueEl ? issueEl.value.trim() : '';
-          _doCreateFolder(s, source, issueKey);
-        });
-        chipsEl.appendChild(chip);
-      });
-    });
   }
 
   function deleteFolder(folderId) {
@@ -6217,6 +6076,24 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
       ? '"' + folder.name + '" 폴더와 이미지 ' + folder.images.length + '개를 삭제할까요?'
       : '"' + folder.name + '" 폴더를 삭제할까요?';
     showConfirmModal(msg, () => {
+      // FTP 폴더 삭제: 이미지 URL 또는 저장된 ftpPath에서 경로 추출
+      try {
+        let dirPath = folder.ftpPath || '';
+        if (!dirPath) {
+          const firstImg = folder.images.find(img => img.dataUrl && img.dataUrl.startsWith('http'));
+          if (firstImg) {
+            const url = new URL(firstImg.dataUrl);
+            dirPath = url.pathname.substring(0, url.pathname.lastIndexOf('/'));
+          }
+        }
+        if (dirPath) {
+          fetch(_FTP_API + '/api/ftp/delete-dir', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ remotePath: dirPath })
+          }).catch(e => console.error('FTP 폴더 삭제 실패:', e));
+        }
+      } catch {}
       folders = folders.filter(f => f.id !== folderId);
       _saveLibToStorageLocal();
       _sbDeleteFolder(folderId);
@@ -6231,9 +6108,9 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
   // ── Folder List View ─────────────────────────────────────────
   function renderFolderList() {
     currentFolderId = null;
-    countEl.textContent = _totalImageCount();
+    if (countEl) countEl.textContent = _totalImageCount();
     // header: 원래 상태로
-    headerEl.innerHTML = '<span class="il-title">이미지 보관함</span><span class="il-count" id="il-count">' + _totalImageCount() + '</span>';
+    headerEl.innerHTML = '<span class="il-title">이미지 보관함</span>';
 
     // dropzone 영역을 폴더 목록으로 교체
     dropzone.style.display = 'none';
@@ -6313,7 +6190,7 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
     if (!folder) { renderFolderList(); return; }
     const images = folder.images;
 
-    countEl.textContent = images.length;
+    if (countEl) countEl.textContent = images.length;
     grid.innerHTML = '';
     dropzone.classList.toggle('has-images', images.length > 0);
 
@@ -6336,6 +6213,15 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
         removeFromLibrary(item.id);
       });
       thumb.appendChild(removeBtn);
+
+      thumb.addEventListener('click', e => {
+        if (e.target.closest('.il-remove')) return;
+        const viewer = document.getElementById('img-viewer-bg');
+        document.getElementById('img-viewer-img').src = item.dataUrl;
+        document.getElementById('img-viewer-name').textContent = item.name || '';
+        viewer.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      });
 
       thumb.addEventListener('dragstart', e => {
         e.dataTransfer.effectAllowed = 'copy';
@@ -6394,6 +6280,13 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
       }
 
       folder.images.push({ id, name: file.name, dataUrl: thumbUrl, ftpUrl: ftpUrl || null });
+      // FTP 경로를 폴더 메타에 저장 (폴더 삭제 시 사용)
+      if (ftpUrl && !folder.ftpPath) {
+        try {
+          const url = new URL(ftpUrl);
+          folder.ftpPath = url.pathname.substring(0, url.pathname.lastIndexOf('/'));
+        } catch {}
+      }
       _saveLibToStorageLocal();
       renderLibrary();
       showToast(ftpUrl ? file.name + ' 업로드 완료' : file.name + ' 추가됨' + (!folder.issueKey ? ' (호수 미설정)' : ' (FTP 실패)'));
@@ -6403,11 +6296,28 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
   function removeFromLibrary(id) {
     const folder = _getCurrentFolder();
     if (!folder) return;
-    const idx = folder.images.findIndex(item => item.id === id);
-    if (idx !== -1) folder.images.splice(idx, 1);
-    _saveLibToStorageLocal();
-    _sbRemoveImage(id);
-    renderLibrary();
+    const img = folder.images.find(item => item.id === id);
+    showConfirmModal('이미지를 삭제하시겠습니까?', () => {
+      // Supabase Storage에서 삭제
+      _sbRemoveImage(id);
+      // FTP에서도 삭제 (public URL이 있는 경우)
+      if (img && img.dataUrl && img.dataUrl.startsWith('http')) {
+        try {
+          const url = new URL(img.dataUrl);
+          const remotePath = url.pathname;
+          fetch(_FTP_API + '/api/ftp/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ remotePath })
+          }).catch(e => console.error('FTP 삭제 실패:', e));
+        } catch {}
+      }
+      const idx = folder.images.findIndex(item => item.id === id);
+      if (idx !== -1) folder.images.splice(idx, 1);
+      _saveLibToStorageLocal();
+      renderLibrary();
+      showToast('이미지 삭제됨');
+    });
   }
 
   function getLibraryImage(id) {
@@ -6422,6 +6332,7 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
   const sidebar = document.getElementById('image-library');
   sidebar.addEventListener('dragover', e => {
     if (!e.dataTransfer.types.includes('Files')) return;
+    if (!currentFolderId) return;
     e.preventDefault();
     e.stopPropagation();
     e.dataTransfer.dropEffect = 'copy';
@@ -6436,20 +6347,14 @@ document.getElementById('link-url-input').addEventListener('keydown', e => {
   });
   sidebar.addEventListener('drop', e => {
     if (!e.dataTransfer.types.includes('Files')) return;
+    if (!currentFolderId) return;
     e.preventDefault();
     e.stopPropagation();
     sidebar.classList.remove('drag-over');
     dropzone.classList.remove('drag-over');
     if (e.dataTransfer.files.length > 0) addToLibrary(e.dataTransfer.files);
   });
-  dropzone.addEventListener('click', () => {
-    if (!currentFolderId) { showToast('폴더를 먼저 선택하세요.'); return; }
-    fileInput.click();
-  });
-  fileInput.addEventListener('change', () => {
-    if (fileInput.files.length > 0) addToLibrary(fileInput.files);
-    fileInput.value = '';
-  });
+  // 클릭 업로드 제거 — 드래그앤드롭만 지원
 
   // ── Drop handling on newsletter ──────────────────────────────
   const nlWrap = document.getElementById('newsletter-wrap');
@@ -6536,7 +6441,6 @@ function _initOgEditing() {
   if (editMode) {
     titleEl.setAttribute('contenteditable', 'true');
     descEl.setAttribute('contenteditable', 'true');
-    urlEl.setAttribute('contenteditable', 'true');
 
     if (!_ogListenersAttached) {
       _ogListenersAttached = true;
@@ -6548,12 +6452,10 @@ function _initOgEditing() {
       };
       syncField(titleEl, 'title');
       syncField(descEl, 'description');
-      syncField(urlEl, 'url');
     }
   } else {
     titleEl.removeAttribute('contenteditable');
     descEl.removeAttribute('contenteditable');
-    urlEl.removeAttribute('contenteditable');
   }
 }
 
@@ -6561,22 +6463,24 @@ function ogAutoFill() {
   const issueId = _getIssueIdentifier();
   const typeLabel = _TYPE_UPPERS[_currentSourceName] || 'PENTAPRISM';
 
-  // 제목: [{뉴스레터종류} {호수숫자}호]
+  // 제목·설명 생성
   let title = '';
+  let desc = '';
   if (!issueId.empty) {
-    if (_currentSourceName === 'bluehole') {
-      title = '[' + typeLabel + ' ' + issueId.display + ']';
+    if (_currentSourceName === 'bluehall') {
+      const fullYear = issueId.year.length === 2 ? '20' + issueId.year : issueId.year;
+      const mm = issueId.month.padStart(2, '0');
+      title = '[BLUEHALL MEETING ' + fullYear + '. ' + mm + ']';
+      desc = '블루홀 미팅 ' + fullYear + '. ' + mm + '호';
     } else {
       title = '[' + typeLabel + ' ' + issueId.number + '호]';
+      // 설명: 가장 상단 첫 텍스트 입력란의 텍스트
+      const tds = document.getElementById('newsletter-wrap').querySelectorAll('.te-td');
+      for (const td of tds) {
+        const text = td.textContent.trim();
+        if (text) { desc = text.slice(0, 120); break; }
+      }
     }
-  }
-
-  // 설명: 가장 상단 첫 텍스트 입력란의 텍스트
-  let desc = '';
-  const tds = document.getElementById('newsletter-wrap').querySelectorAll('.te-td');
-  for (const td of tds) {
-    const text = td.textContent.trim();
-    if (text) { desc = text.slice(0, 120); break; }
   }
 
   if (title) _ogData = { ..._ogData, title };
@@ -6685,22 +6589,33 @@ function enterTemplateMode() {
 }
 
 function exitTemplateMode() {
-  templateMode = false;
-  _tplHistory.length = 0;
-  document.body.classList.remove('template-mode-active');
-  // 템플릿 빌더 초기화
   const tplWrap = document.getElementById('template-wrap');
   const tbody = tplWrap.querySelector('tbody');
-  if (tbody) tbody.innerHTML = '';
-  _syncTplUndoBtn();
-  // 사이드바 원복
-  _sidebarView = 'images';
-  document.getElementById('image-library').style.display = '';
-  document.getElementById('template-library').style.display = 'none';
-  document.querySelectorAll('.sidebar-toggle-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.view === 'images');
-  });
-  showToast('에디터 모드로 돌아왔습니다.');
+  const hasContent = tbody && tbody.innerHTML.trim().length > 0;
+
+  function doExit() {
+    templateMode = false;
+    _tplHistory.length = 0;
+    document.body.classList.remove('template-mode-active');
+    if (tbody) tbody.innerHTML = '';
+    _syncTplUndoBtn();
+    _sidebarView = 'images';
+    document.getElementById('image-library').style.display = '';
+    document.getElementById('template-library').style.display = 'none';
+    document.querySelectorAll('.sidebar-toggle-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.view === 'images');
+    });
+    showToast('에디터 모드로 돌아왔습니다.');
+  }
+
+  if (hasContent) {
+    showConfirmModal(
+      '편집 중인 템플릿이 초기화됩니다.\n정말 나가시겠습니까?',
+      doExit
+    );
+  } else {
+    doExit();
+  }
 }
 
 function initTemplateBuilder() {
@@ -7029,6 +6944,7 @@ function saveCurrentTemplate() {
     return;
   }
   _pendingTplHtml = html;
+  _renderSourceChips('tpl-source-chips', _currentSourceName || 'pentaprism');
   const input = document.getElementById('tpl-name-input');
   input.value = '새 템플릿';
   const bg = document.getElementById('tpl-name-modal-bg');
@@ -7045,7 +6961,8 @@ async function _confirmTplName() {
   const name = document.getElementById('tpl-name-input').value.trim();
   if (!name) { showToast('이름을 입력해주세요.'); return; }
   if (!_pendingTplHtml) return;
-  await addTemplate(name, _pendingTplHtml);
+  const source = _getActiveSource('tpl-source-chips');
+  await addTemplate(name, _pendingTplHtml, source);
   _closeTplNameModal();
   await renderTemplateLibrary();
   showToast('템플릿이 저장되었습니다.');
