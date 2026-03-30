@@ -1338,11 +1338,26 @@
     }
     #template-label {
       width: 100%; max-width: 760px;
-      display: flex; align-items: center; gap: 8px;
-      margin-bottom: 10px;
-      font-size: 12px; color: #9ca3af;
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 12px;
+      padding: 12px 18px;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(99,102,241,0.12);
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(99,102,241,0.06);
     }
-    #template-label strong { color: #6b7280; font-weight: 600; }
+    #template-label .tpl-label-icon {
+      width: 32px; height: 32px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #6366f1, #818cf8);
+      border-radius: 9px;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.25);
+    }
+    #template-label .tpl-label-icon svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    #template-label .tpl-label-text { display: flex; flex-direction: column; gap: 2px; }
+    #template-label .tpl-label-title { font-size: 13px; font-weight: 700; color: #1e1b4b; letter-spacing: -0.3px; }
+    #template-label .tpl-label-desc { font-size: 11px; color: #9ca3af; line-height: 1.4; }
 
     /* 템플릿 모드에서 사이드바 stage margin */
     body.template-mode-active #stage { transition: none; }
@@ -1498,7 +1513,11 @@
 
   <!-- ── Template Builder (hidden by default) ── -->
   <div id="template-label" style="display:none">
-    <strong>템플릿 제작</strong>
+    <div class="tpl-label-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M17 14v7m-3.5-3.5h7"/></svg></div>
+    <div class="tpl-label-text">
+      <span class="tpl-label-title">템플릿 제작</span>
+      <span class="tpl-label-desc">자주 사용하는 레이아웃을 미리 조합해서 저장하세요</span>
+    </div>
   </div>
   <div id="template-wrap" class="edit-mode" style="display:none">
     <div style="max-width:720px;margin:0 auto;text-align:center;font-size:0;line-height:0">
@@ -5840,7 +5859,7 @@ function copyHTML() {
   });
 }
 
-const _FTP_API = 'https://9589ee228105f2.lhr.life';
+const _FTP_API = 'https://a4a4dbc46b33e0.lhr.life';
 
 // ── 서버 상태 체크: 서버 미실행 시 접근 차단 ──
 (async function _checkServerHealth() {
