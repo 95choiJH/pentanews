@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PENTANEWS 로그인</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Malgun Gothic', -apple-system, sans-serif;
+    }
+    .login-card {
+      width: 360px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 20px;
+      padding: 40px 32px 36px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+    .login-title {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 800;
+      color: #1e1b4b;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+    .login-sub {
+      text-align: center;
+      font-size: 13px;
+      color: #9ca3af;
+      margin-bottom: 28px;
+    }
+    .field {
+      margin-bottom: 16px;
+    }
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+    .field input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #1f2937;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .field input:focus {
+      border-color: #6366f1;
+    }
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #6366f1;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .15s;
+      margin-top: 8px;
+    }
+    .login-btn:hover { background: #4f46e5; }
+    .login-btn:active { background: #4338ca; }
+    .login-btn:disabled {
+      background: #a5b4fc;
+      cursor: not-allowed;
+    }
+    .error-msg {
+      text-align: center;
+      font-size: 13px;
+      color: #ef4444;
+      margin-top: 14px;
+      min-height: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="login-title">PENTANEWS</div>
+    <div class="login-sub">뉴스레터 에디터에 로그인하세요</div>
+    <form id="login-form">
+      <div class="field">
+        <label for="login-id">아이디</label>
+        <input type="text" id="login-id" autocomplete="username" autofocus />
+      </div>
+      <div class="field">
+        <label for="login-pw">비밀번호</label>
+        <input type="password" id="login-pw" autocomplete="current-password" />
+      </div>
+      <button type="submit" class="login-btn" id="login-btn">로그인</button>
+    </form>
+    <div class="error-msg" id="error-msg"></div>
+  </div>
+  <script>
+    const _LOGIN_API = 'https://9589ee228105f2.lhr.life';
+    const form = document.getElementById('login-form');
+    const btn = document.getElementById('login-btn');
+    const errEl = document.getElementById('error-msg');
+    const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      errEl.textContent = '';
+      btn.disabled = true;
+      btn.textContent = '로그인 중...';
+
+      const id = document.getElementById('login-id').value.trim();
+      const pw = document.getElementById('login-pw').value;
+
+      if (!id || !pw) {
+        errEl.textContent = '아이디와 비밀번호를 입력해주세요.';
+        btn.disabled = false;
+        btn.textContent = '로그인';
+        return;
+      }
+
+      try {
+        // 로컬이면 상대경로, 외부 호스팅이면 터널 URL 사용
+        const apiBase = isLocal ? '' : (_LOGIN_API || '');
+        const res = await fetch((apiBase || '') + '/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, pw })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          // 외부 호스팅: localStorage에 인증 토큰 저장
+          if (!isLocal) {
+            const midnight = new Date();
+            midnight.setHours(24, 0, 0, 0);
+            localStorage.setItem('pentanews_auth_token', data.token || '1');
+            localStorage.setItem('pentanews_auth_expires', midnight.getTime());
+            sessionStorage.setItem('pentanews_authed', '1');
+          }
+          window.location.href = isLocal ? '/' : 'index.html';
+        } else {
+          errEl.textContent = data.message || '로그인에 실패했습니다.';
+        }
+      } catch {
+        errEl.textContent = '서버에 연결할 수 없습니다.';
+      }
+
+      btn.disabled = false;
+      btn.textContent = '로그인';
+    });
+  </script>
+</body>
+</html>

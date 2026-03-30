@@ -6,18 +6,100 @@ const path = require('path');
 const { WebSocketServer } = require('ws');
 const crypto = require('crypto');
 const { Readable } = require('stream');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
 
-app.use(express.json({ limit: '50mb' }));
-
-// CORS
+// CORS (body 파싱 전에 처리)
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
+
+app.use(express.json({ limit: '50mb' }));
+app.use((err, req, res, next) => {
+  if (err.type === 'entity.parse.failed') {
+    return res.status(400).json({ ok: false, message: 'JSON 파싱 오류' });
+  }
+  next(err);
+});
+app.use(cookieParser());
+
+// ─── Auth ─────────────────────────────────────────────────
+const AUTH_ID = process.env.AUTH_ID || 'admin';
+const AUTH_PW = process.env.AUTH_PW || 'pentanews';
+const sessions = new Map();
+
+function isAuthenticated(req) {
+  const checkToken = (t) => {
+    if (!t || !sessions.has(t)) return false;
+    const s = sessions.get(t);
+    if (s.expiresAt && Date.now() >= s.expiresAt) { sessions.delete(t); return false; }
+    return true;
+  };
+  // 쿠키 기반 (로컬 서버)
+  if (checkToken(req.cookies?.pentanews_session)) return true;
+  // Bearer 토큰 기반 (외부 호스팅)
+  const auth = req.headers.authorization;
+  if (auth && auth.startsWith('Bearer ')) {
+    if (checkToken(auth.slice(7))) return true;
+  }
+  return false;
+}
+
+// 인증 API (인증 불필요)
+app.post('/api/auth/login', (req, res) => {
+  const { id, pw } = req.body;
+  if (id === AUTH_ID && pw === AUTH_PW) {
+    const token = crypto.randomUUID();
+    const midnight = new Date();
+    midnight.setHours(24, 0, 0, 0);
+    const msUntilMidnight = midnight.getTime() - Date.now();
+    sessions.set(token, { id, loginAt: Date.now(), expiresAt: midnight.getTime() });
+    res.cookie('pentanews_session', token, {
+      httpOnly: true,
+      sameSite: 'lax',
+      maxAge: msUntilMidnight
+    });
+    return res.json({ ok: true, token });
+  }
+  res.status(401).json({ ok: false, message: '아이디 또는 비밀번호가 올바르지 않습니다.' });
+});
+
+app.post('/api/auth/logout', (req, res) => {
+  const token = req.cookies?.pentanews_session;
+  if (token) sessions.delete(token);
+  res.clearCookie('pentanews_session');
+  res.json({ ok: true });
+});
+
+app.get('/api/auth/check', (req, res) => {
+  res.json({ ok: isAuthenticated(req) });
+});
+
+// 인증 미들웨어: 보호 대상 라우트
+app.use((req, res, next) => {
+  const p = req.path;
+  // 인증 없이 접근 허용
+  if (p === '/login.html' || p.startsWith('/api/auth/')) return next();
+  // 정적 리소스 (CDN 라이브러리 등)
+  if (/\.(css|js|png|jpg|jpeg|gif|svg|ico|woff2?|ttf|eot)$/i.test(p)) return next();
+  // localhost 내부 요청 (start.js 등) 허용
+  const ip = req.ip || req.connection?.remoteAddress || '';
+  if (ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1') return next();
+
+  if (!isAuthenticated(req)) {
+    // HTML 페이지 요청 → 로그인 리다이렉트
+    if (p === '/' || p === '/index.html' || req.accepts('html')) {
+      return res.redirect('/login.html');
+    }
+    // API 요청 → 401
+    return res.status(401).json({ ok: false, message: '인증이 필요합니다.' });
+  }
   next();
 });
 

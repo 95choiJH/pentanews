@@ -17,8 +17,10 @@ const fs = require('fs');
 const path = require('path');
 
 const INDEX_PATH = path.join(__dirname, 'index.html');
+const LOGIN_PATH = path.join(__dirname, 'login.html');
 const FTP_REMOTE_PATH = '/edit/';
 const FTP_FILE_NAME = 'index.html';
+const LOGIN_FILE_NAME = 'login.html';
 const SERVER_PORT = process.env.PORT || 3900;
 const API_BASE = `http://localhost:${SERVER_PORT}`;
 
@@ -117,10 +119,35 @@ async function updateAndUpload(tunnelUrl) {
 
     const data = await res.json();
     if (data.ok) {
-      console.log(`[tunnel] FTP 업로드 성공: ${data.file}`);
-      console.log(`[tunnel] 준비 완료! 브라우저에서 index.html 접속 가능`);
+      console.log(`[tunnel] index.html FTP 업로드 성공: ${data.file}`);
     } else {
-      console.error('[tunnel] FTP 업로드 실패:', data.message);
+      console.error('[tunnel] index.html FTP 업로드 실패:', data.message);
+    }
+
+    // login.html 업데이트 + FTP 업로드
+    let loginHtml = fs.readFileSync(LOGIN_PATH, 'utf-8');
+    const loginRegex = /const _LOGIN_API = '[^']*'/;
+    const loginReplacement = `const _LOGIN_API = '${tunnelUrl}'`;
+    if (loginRegex.test(loginHtml)) {
+      loginHtml = loginHtml.replace(loginRegex, loginReplacement);
+      fs.writeFileSync(LOGIN_PATH, loginHtml, 'utf-8');
+      console.log(`[tunnel] login.html API URL 업데이트 완료`);
+    }
+    const loginRes = await fetch(`${API_BASE}/api/ftp/upload-html`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        remotePath: FTP_REMOTE_PATH,
+        fileName: LOGIN_FILE_NAME,
+        html: loginHtml
+      })
+    });
+    const loginData = await loginRes.json();
+    if (loginData.ok) {
+      console.log(`[tunnel] login.html FTP 업로드 성공: ${loginData.file}`);
+      console.log(`[tunnel] 준비 완료!`);
+    } else {
+      console.error('[tunnel] login.html FTP 업로드 실패:', loginData.message);
     }
   } catch (err) {
     console.error('[tunnel] 업데이트/업로드 실패:', err.message);

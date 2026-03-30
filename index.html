@@ -1798,6 +1798,28 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+// ── Auth Gate (외부 호스팅 대응) ─────────────────────────────
+(function authGate() {
+  // 로컬 개발환경이면 서버 미들웨어가 처리하므로 스킵
+  if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
+  // 만료 체크: 자정 지나면 토큰 삭제
+  const expires = parseInt(localStorage.getItem('pentanews_auth_expires') || '0');
+  if (expires && Date.now() >= expires) {
+    localStorage.removeItem('pentanews_auth_token');
+    localStorage.removeItem('pentanews_auth_expires');
+    sessionStorage.removeItem('pentanews_authed');
+  }
+  // 이미 인증된 세션이 있으면 스킵
+  if (sessionStorage.getItem('pentanews_authed')) return;
+  // 로그인 토큰 확인
+  const token = localStorage.getItem('pentanews_auth_token');
+  if (!token) {
+    location.replace('login.html');
+    throw new Error('auth_redirect');
+  }
+  sessionStorage.setItem('pentanews_authed', '1');
+})();
+
 // ── Supabase Client ─────────────────────────────────────────
 const SUPABASE_URL = 'https://kxtjdeszifznhfsaalba.supabase.co';
 const SUPABASE_KEY_STORAGE = 'pentanews_supabase_key';
@@ -5818,7 +5840,7 @@ function copyHTML() {
   });
 }
 
-const _FTP_API = 'https://b08b6998a7baab.lhr.life';
+const _FTP_API = 'https://9589ee228105f2.lhr.life';
 
 // ── 서버 상태 체크: 서버 미실행 시 접근 차단 ──
 (async function _checkServerHealth() {
