@@ -998,6 +998,11 @@
       transition: background .15s;
     }
     .spacer-popover .sp-btn:hover { background: #4f46e5; }
+    .spacer-popover .sp-btn-del {
+      background: rgba(239,68,68,0.1); color: #ef4444;
+      padding: 5px 7px; display: flex; align-items: center; justify-content: center;
+    }
+    .spacer-popover .sp-btn-del:hover { background: #ef4444; color: #fff; }
 
     /* ── Confirm Modal uses shared .glass-modal base ── */
 
@@ -1529,38 +1534,38 @@
 </div>
 
 <div id="newsletter-wrap">
-<div style="max-width: 720px;margin: 0 auto;text-align: center;font-size:0;line-height:0">
-    <table cellpadding="0" cellspacing="0" style="width: 720px;padding: 0;margin: 0;background-color: #fff;text-align: left">
+<div style="margin: 0px auto; width: 720px; line-height: 0; font-size: 0px; position: relative;">
+    <table width="720" align="center" cellpadding="0" cellspacing="0" style="margin: 0px; padding: 0px; border: currentColor; border-image: none; font-size: 0px;">
         <tbody>
             <tr>
                 <td height="30"></td>
             </tr>
             <tr>
                 <td>
-                    <table cellpadding="0" cellspacing="0" style="width: 100%;padding: 0;margin: 0">
+                    <table cellpadding="0" cellspacing="0" style="width:100%; padding:0; margin:0; font-size:0;">
                         <tbody>
                             <tr>
-                                <td colspan="3" style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top;text-align:center;">
-                                    <img src="" alt="" style="border:0;width:100%;display:block;" />
+                                <td width="720" valign="top" colspan="3">
+                                    <img style="vertical-align: top; display: block;" alt="" src="" border="0">
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2" width="480" style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top;text-align:center;">
-                                    <img src="" alt="" style="border:0;width:100%;display:block;" />
+                                <td valign="top" width="480" colspan="2" style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img style="vertical-align: top; display: block; width:100%;" alt="" src="" border="0">
                                 </td>
-                                <td colspan="1" width="240" style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top;text-align:center;">
-                                    <img src="" alt="" style="border:0;width:100%;display:block;" />
+                                <td valign="top" width="240" style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img style="vertical-align: top; display: block; width:100%;" alt="" src="" border="0">
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="1" width="240" style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top;text-align:center;">
-                                    <img src="" alt="" style="border:0;width:100%;display:block;" />
+                                <td valign="top" width="240" style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img style="vertical-align: top; display: block; width:100%;" alt="" src="" border="0">
                                 </td>
-                                <td colspan="1" width="240" style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top;text-align:center;">
-                                    <img src="" alt="" style="border:0;width:100%;display:block;" />
+                                <td valign="top" width="240" style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img style="vertical-align: top; display: block; width:100%;" alt="" src="" border="0">
                                 </td>
-                                <td colspan="1" width="240" style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top;text-align:center;">
-                                    <img src="" alt="" style="border:0;width:100%;display:block;" />
+                                <td valign="top" width="240" style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img style="vertical-align: top; display: block; width:100%;" alt="" src="" border="0">
                                 </td>
                             </tr>
                             <tr>
@@ -1570,50 +1575,40 @@
                     </table>
                 </td>
             </tr>
-            <!-- ── 본문: 콘텐츠 섹션 1 ── -->
             <tr data-content-section>
                 <td>
-                    <table cellpadding="0" cellspacing="0" style="width: 100%;padding: 0;margin: 0">
+                    <table cellpadding="0" cellspacing="0" style="width:100%; padding:0; margin:0; font-size:0;">
                         <tbody>
-                            <!-- ── 이미지 영역 1 ── -->
                             <tr>
                                 <td width="24"></td>
-                                <td style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top;text-align:center;">
+                                <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;text-align:center;">
                                     <img src="" alt="" style="border:0;max-width:100%;" />
                                 </td>
                                 <td width="24"></td>
                             </tr>
-                            <tr>
-                                <td colspan="3" height="30"></td>
-                            </tr>
-                            <!-- ── 이미지 영역 2 ── -->
+                            <tr><td colspan="3" height="30"></td></tr>
                             <tr>
                                 <td width="24"></td>
-                                <td style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top;text-align:center;">
+                                <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;text-align:center;">
                                     <img src="" alt="" style="border:0;max-width:100%;" />
                                 </td>
                                 <td width="24"></td>
                             </tr>
-                            <tr>
-                                <td colspan="3" height="16"></td>
-                            </tr>
+                            <tr><td colspan="3" height="10"></td></tr>
                             <tr>
                                 <td width="24"></td>
-                                <td style="font-family: 'Malgun Gothic', sans-serif;font-size: 13px;color: #555;line-height: 18px;vertical-align: top;letter-spacing: -1px;word-break: keep-all;"></td>
+                                <td style="color: #575756; line-height: 20px; letter-spacing: -1px; font-family: 'Malgun Gothic', sans-serif; font-size: 13px; vertical-align: top; word-break: keep-all;">
+                                    텍스트를 입력하세요.
+                                </td>
                                 <td width="24"></td>
                             </tr>
+                            <tr><td colspan="3" height="50"></td></tr>
                             <tr>
-                                <td colspan="3" height="50"></td>
+                                <td width="25" height="1" style="padding:0;margin:0;font-size:0;line-height:1;"></td>
+                                <td height="1" style="padding:0;margin:0;font-size:0;line-height:1;vertical-align:top;background-color:#adadae"></td>
+                                <td width="25" height="1" style="padding:0;margin:0;font-size:0;line-height:1;"></td>
                             </tr>
-                            <!-- ── 구분선 ── -->
-                            <tr>
-                                <td width="25" height="1" style="padding: 0;margin: 0;font-size: 0;line-height: 1;"></td>
-                                <td height="1" style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top;background-color: #adadae"></td>
-                                <td width="25" height="1" style="padding: 0;margin: 0;font-size: 0;line-height: 1;"></td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" height="50"></td>
-                            </tr>
+                            <tr><td colspan="3" height="50"></td></tr>
                         </tbody>
                     </table>
                 </td>
@@ -1621,25 +1616,23 @@
             <!-- ── Footer ── -->
             <tr>
                 <td>
-                    <table cellpadding="0" cellspacing="0" style="width: 100%;padding: 0;margin: 0">
+                    <table cellpadding="0" cellspacing="0" style="width:100%; padding:0; margin:0; font-size:0;">
                         <tbody>
                             <tr>
                                 <td width="24"></td>
-                                <td style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top">
-                                    <img src="https://shout.co.kr/images/com/footer.jpg" alt="PENTAPRISM (주)펜타브리드 서울시 서초구 서운로26길 9 펜타타워 Tel 02.6911.5595, Fax 02.6499.2525 WWW.PENTABREED.COM" width="670" height="85" usemap="#footer" style="border: 0" />
+                                <td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img src="https://shout.co.kr/images/com/footer.jpg" alt="PENTAPRISM (주)펜타브리드 서울시 서초구 서운로26길 9 펜타타워 Tel 02.6911.5595, Fax 02.6499.2525 WWW.PENTABREED.COM" width="670" height="85" usemap="#footer" style="border:0" />
                                     <map id="footer" name="footer">
                                         <area shape="rect" coords="238,70,384,79" href="https://www.pentabreed.com" target="_blank" alt="PENTAPOST" />
                                     </map>
                                 </td>
                                 <td width="24"></td>
                             </tr>
+                            <tr><td colspan="3" height="40"></td></tr>
                             <tr>
-                                <td colspan="3" height="40"></td>
-                            </tr>
-                            <tr>
-                                <td width="25" height="1" style="padding: 0;margin: 0;font-size: 0;line-height: 1;"></td>
-                                <td height="1" style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top;background-color: #d6d6d6"></td>
-                                <td width="25" height="1" style="padding: 0;margin: 0;font-size: 0;line-height: 1;"></td>
+                                <td width="25" height="1" style="padding:0;margin:0;font-size:0;line-height:1;"></td>
+                                <td height="1" style="padding:0;margin:0;font-size:0;line-height:1;vertical-align:top;background-color:#d6d6d6"></td>
+                                <td width="25" height="1" style="padding:0;margin:0;font-size:0;line-height:1;"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -1647,24 +1640,20 @@
             </tr>
             <tr>
                 <td>
-                    <table cellpadding="0" cellspacing="0" style="width: 100%;padding: 0;margin: 0">
+                    <table cellpadding="0" cellspacing="0" style="width:100%; padding:0; margin:0; font-size:0;">
                         <tbody>
-                            <tr>
-                                <td colspan="3" height="27"></td>
-                            </tr>
+                            <tr><td colspan="3" height="27"></td></tr>
                             <tr>
                                 <td width="24"></td>
-                                <td width="240" style="padding: 0;margin: 0;font-size: 0;line-height: 1;vertical-align: top">
-                                    <img src="https://shout.co.kr/images/com/footer_pentaprism.jpg" alt="펜타프리즘" width="100" height="24" style="border: 0" />
+                                <td width="240" style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
+                                    <img src="https://shout.co.kr/images/com/footer_pentaprism.jpg" alt="펜타프리즘" width="100" height="24" style="border:0" />
                                 </td>
-                                <td style="font-family: 'Malgun Gothic', sans-serif;font-size: 12px;color: #414042;letter-spacing:-1px;line-height: 18px;vertical-align: top;word-break: keep-all;">
+                                <td style="font-family:'Malgun Gothic',sans-serif;font-size:12px;color:#414042;letter-spacing:-1px;line-height:18px;vertical-align:top;word-break:keep-all;">
                                     본 메일은 <span class="footer-date-text" id="footer-date-text"></span><span class="footer-date-picker" id="footer-date-picker"><select id="fd-year"></select><span>년</span><select id="fd-month"></select><span>월</span><select id="fd-day"></select><span>일 기준,</span></span> PENTAPRISM 수신에 동의하신 분들께 발송됩니다.<br/>
                                     메일수신을 원하지 않으신다면, <span style="color:#00bad2;">[수신거부]</span>를 클릭해주시기 바랍니다.
                                 </td>
                             </tr>
-                            <tr>
-                                <td colspan="3" height="50"></td>
-                            </tr>
+                            <tr><td colspan="3" height="50"></td></tr>
                         </tbody>
                     </table>
                 </td>
@@ -1794,6 +1783,7 @@
   <input type="number" id="spacer-input" min="0" max="100" />
   <span class="sp-unit">px</span>
   <button class="sp-btn" id="spacer-apply-btn">적용</button>
+  <button class="sp-btn sp-btn-del" id="spacer-delete-btn" title="삭제"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
 </div>
 
 <!-- Alt Balloon -->
@@ -2367,12 +2357,24 @@ document.addEventListener('paste', e => {
         el.remove();
         return;
       }
+      // div/p의 font-weight:bold → 내부를 <b>로 감싸기
+      const st = el.getAttribute('style') || '';
+      const isBold = /font-weight\s*:\s*(bold|[7-9]00)/i.test(st);
+      const isItalic = /font-style\s*:\s*italic/i.test(st);
       const br = document.createElement('br');
       el.parentNode.insertBefore(br, el);
-      while (el.firstChild) el.parentNode.insertBefore(el.firstChild, el);
+      if (isBold || isItalic) {
+        let wrapper = null;
+        if (isBold && isItalic) { wrapper = document.createElement('b'); const inner = document.createElement('i'); while (el.firstChild) inner.appendChild(el.firstChild); wrapper.appendChild(inner); }
+        else if (isBold) { wrapper = document.createElement('b'); while (el.firstChild) wrapper.appendChild(el.firstChild); }
+        else { wrapper = document.createElement('i'); while (el.firstChild) wrapper.appendChild(el.firstChild); }
+        el.parentNode.insertBefore(wrapper, el);
+      } else {
+        while (el.firstChild) el.parentNode.insertBefore(el.firstChild, el);
+      }
       el.remove();
     });
-    tmp.querySelectorAll('script, style, img, table, iframe, object, embed, form, input, select, textarea').forEach(el => el.remove());
+    tmp.querySelectorAll('script, style, meta, link, img, table, iframe, object, embed, form, input, select, textarea').forEach(el => el.remove());
     // span → 구조적 서식 태그로 변환 후 제거
     tmp.querySelectorAll('span').forEach(sp => {
       const s = sp.getAttribute('style') || '';
@@ -2561,7 +2563,33 @@ function _cleanClone(container) {
   clone.classList.remove('edit-mode');
   // 빈 class 속성 제거
   clone.querySelectorAll('[class=""]').forEach(el => el.removeAttribute('class'));
+  // data-fixed 속성 제거
+  clone.querySelectorAll('[data-fixed]').forEach(el => el.removeAttribute('data-fixed'));
+  _fixShoutIssueAnchors(clone);
   return clone.innerHTML;
+}
+
+// 내보내기/배포 전용: 샤우트 배너 a링크 추가 + 섹션 id 부여
+function _fixShoutIssueAnchors(clone) {
+  if (_currentSourceName !== 'shout') return;
+
+  // 배너 2,3행 이미지에 a 링크 추가
+  const headerTable = clone.querySelector('table[data-shout-header]');
+  if (headerTable) _reindexShoutHeaderLinks(headerTable);
+
+  // #issue 링크: 절대 URL → 상대 해시로 복원
+  clone.querySelectorAll('a[href*="#issue"]').forEach(a => {
+    const m = a.getAttribute('href').match(/#issue\d+/);
+    if (m) a.setAttribute('href', m[0]);
+  });
+
+  // 각 data-content-section 내부 첫 번째 tr에 id="issue1"~순서대로
+  const sections = clone.querySelectorAll('[data-content-section]');
+  sections.forEach((section, i) => {
+    const innerTbody = section.querySelector('table > tbody');
+    const firstTr = innerTbody ? innerTbody.querySelector('tr') : section.querySelector('tr');
+    if (firstTr) firstTr.id = 'issue' + (i + 1);
+  });
 }
 
 function saveSnapshot() {
@@ -2629,6 +2657,50 @@ async function _loadTemplates() {
     console.error('Supabase templates load failed, falling back:', e);
     return filterBySource(_loadTemplatesLocal());
   }
+}
+
+// 기존 샤우트 템플릿 마이그레이션: width 24→65, data-fixed 제거
+async function _migrateShoutTemplates() {
+  const MIGRATE_KEY = 'pentanews_shout_tpl_v2';
+  if (localStorage.getItem(MIGRATE_KEY)) return;
+
+  const arr = _loadTemplatesLocal();
+  let localChanged = false;
+  const sb = _getSb();
+
+  for (const tpl of arr) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = tpl.html;
+    let changed = false;
+
+    // 샤우트: 양옆 패딩 td width 24→65
+    if ((tpl.source || 'pentaprism') === 'shout') {
+      tmp.querySelectorAll('td[width="24"]').forEach(td => {
+        if (td.textContent.trim() === '' && td.children.length === 0) {
+          td.setAttribute('width', '65');
+          changed = true;
+        }
+      });
+    }
+
+    // 모든 템플릿: data-fixed 속성 제거
+    tmp.querySelectorAll('[data-fixed]').forEach(el => {
+      el.removeAttribute('data-fixed');
+      changed = true;
+    });
+
+    if (changed) {
+      tpl.html = tmp.innerHTML;
+      localChanged = true;
+      if (sb) {
+        try {
+          await sb.from('templates').update({ html: tpl.html }).eq('id', tpl.id);
+        } catch (e) { console.error('Supabase template migration failed:', e); }
+      }
+    }
+  }
+  if (localChanged) _saveTemplatesLocal(arr);
+  localStorage.setItem(MIGRATE_KEY, '1');
 }
 
 async function addTemplate(name, html, source) {
@@ -2757,23 +2829,32 @@ const _SHOUT_INITIAL_HTML = `
                         <tbody>
                             <tr>
                                 <td width="720" valign="top" colspan="3">
-                                    <img style="vertical-align: top; display: block;" alt="" src="" border="0">
+                                    <img style="vertical-align: top; display: block;" alt="" src="" border="0" usemap="#map_top">
+                                    <map name="map_top" id="map_top">
+                                        <area href="https://pentapost.net/" shape="rect" coords="626,0,720,94" target="_blank" alt="SHOUT">
+                                        <area href="https://pentapost.net/" shape="rect" coords="460,125,525,143" target="_blank" alt="PENTAPOST">
+                                        <area href="https://linktr.ee/pentabreed" shape="rect" coords="534,125,586,143" target="_blank" alt="SHOUT">
+                                        <area href="https://www.facebook.com/pentabreed" shape="rect" coords="596,125,612,143" target="_blank" alt="FACEBOOK">
+                                        <area href="https://www.instagram.com/pentabreed_official/?hl=ko" shape="rect" coords="626,125,642,143" target="_blank" alt="INSTAGRAM">
+                                        <area href="https://www.youtube.com/pentabreedkorea" shape="rect" coords="653,125,673,143" target="_blank" alt="YOUTUBE">
+                                        <area title="문의 메일 작성하기" href="mailto:shout@pentabreed.com?subject=%5Bquestions%5D" shape="rect" coords="683,125,700,143" alt="문의하기">
+                                    </map>
                                 </td>
                             </tr>
                             <tr><td height="2" valign="top" colspan="3"></td></tr>
                             <tr>
                                 <td width="720" valign="top" colspan="3">
-                                    <img style="vertical-align: top; display: block;" alt="" src="" border="0">
+                                    <a href="#issue1"><img style="vertical-align: top; display: block;" alt="" src="" border="0"></a>
                                 </td>
                             </tr>
                             <tr><td height="2" valign="top" colspan="3"></td></tr>
                             <tr>
                                 <td valign="top" width="359" style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
-                                    <img style="vertical-align: top; display: block; width:100%;" alt="" src="" border="0">
+                                    <a href="#issue2"><img style="vertical-align: top; display: block; width:100%;" alt="" src="" border="0"></a>
                                 </td>
                                 <td width="2" valign="top"></td>
                                 <td valign="top" width="359" style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;">
-                                    <img style="vertical-align: top; display: block; width:100%;" alt="" src="" border="0">
+                                    <a href="#issue3"><img style="vertical-align: top; display: block; width:100%;" alt="" src="" border="0"></a>
                                 </td>
                             </tr>
                         </tbody>
@@ -2917,7 +2998,6 @@ const _SHOUT_INITIAL_HTML = `
                                 </td>
                                 <td width="65"></td>
                             </tr>
-                            <tr><td colspan="3" height="30"></td></tr>
                         </tbody>
                     </table>
                 </td>
@@ -3216,10 +3296,16 @@ async function _runMigrationIfNeeded() {
     setupLayoutButtons();
   } catch (e) { console.error('Init wrap/setup error:', e); }
   setEditMode(false);
-  renderTemplateLibrary().catch(e => console.error('Template lib error:', e));
+  _migrateShoutTemplates().then(() => renderTemplateLibrary()).catch(e => console.error('Template lib error:', e));
   renderHistoryList().catch(e => console.error('History list error:', e));
   _positionBookmark();
   window.addEventListener('resize', _positionBookmark);
+
+  // 뷰모드에서 #issue 앵커 클릭 시 URL 해시 변경 방지
+  document.getElementById('newsletter-wrap').addEventListener('click', e => {
+    const a = e.target.closest('a[href*="#issue"]');
+    if (a) { e.preventDefault(); }
+  });
 })();
 
 function _positionBookmark() {
@@ -3328,8 +3414,13 @@ function syncFooterDateText() {
 // ── Image Wrapping ───────────────────────────────────────────
 function wrapImages(container) {
   const root = container || document.getElementById('newsletter-wrap');
+  // 샤우트: 배너 2,3행 이미지에 a 링크 보장
+  if (_currentSourceName === 'shout') {
+    const headerTable = root.querySelector('table[data-shout-header]');
+    if (headerTable) _reindexShoutHeaderLinks(headerTable);
+  }
   root.querySelectorAll('img').forEach(img => {
-    if (img.parentNode.classList.contains('ie-wrap')) return;
+    if (img.closest('.ie-wrap')) return;
     wrapOneImage(img);
   });
   // 빈 이미지 placeholder 마킹
@@ -3339,8 +3430,8 @@ function wrapImages(container) {
 }
 
 function wrapOneImage(img) {
+  if (img.closest('.ie-wrap')) return;
   const parent = img.parentNode;
-  if (parent.classList.contains('ie-wrap')) return;
 
   const hasLink = parent.tagName === 'A';
   const target = hasLink ? parent : img;
@@ -3582,8 +3673,8 @@ function isImageOnlyCell(td) {
 
   let _nearZone = null;
 
-  function _updateNearZone(e) {
-    const cls = dragType === 'section' ? '.editor-section-zone' : '.editor-insert-zone';
+  function _updateNearZone(e, forceInsert) {
+    const cls = (dragType === 'section' && !forceInsert) ? '.editor-section-zone' : '.editor-insert-zone';
     const zones = wrap.querySelectorAll(cls);
     let closest = null;
     let minDist = 80; // 80px 이내만 반응
@@ -3606,7 +3697,34 @@ function isImageOnlyCell(td) {
   }
 
   wrap.addEventListener('dragover', e => {
-    if (!dragType) return;
+    // 이미지 파일/라이브러리 이미지 드래그 시 인서트존 반응
+    const isImgDrag = !dragType && (
+      e.dataTransfer.types.includes('application/x-library-image') ||
+      e.dataTransfer.types.includes('Files')
+    );
+    if (!dragType && !isImgDrag) return;
+    if (isImgDrag && !editMode) return;
+    if (isImgDrag) {
+      // 기존 ie-wrap 위에서는 기존 핸들러에 맡김
+      if (e.target.closest('.ie-wrap')) {
+        document.body.classList.remove('is-dragging-item');
+        return;
+      }
+      document.body.classList.add('is-dragging-item');
+      const zone = e.target.closest('.editor-insert-zone');
+      if (zone) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.dataTransfer.dropEffect = 'copy';
+        showPreview(zone, 'image');
+      } else if (activeZone) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.dataTransfer.dropEffect = 'copy';
+      }
+      _updateNearZone(e);
+      return;
+    }
     _updateNearZone(e);
     if (dragType === 'section') {
       const zone = e.target.closest('.editor-section-zone');
@@ -3632,10 +3750,68 @@ function isImageOnlyCell(td) {
   });
 
   wrap.addEventListener('dragleave', e => {
-    if (!wrap.contains(e.relatedTarget)) { clearPreview(); _clearNear(); }
+    if (!wrap.contains(e.relatedTarget)) {
+      clearPreview(); _clearNear();
+      if (!dragType) document.body.classList.remove('is-dragging-item');
+    }
   });
 
   wrap.addEventListener('drop', e => {
+    // 이미지 파일/라이브러리 이미지를 인서트존에 드롭
+    const isLibImg = e.dataTransfer.types.includes('application/x-library-image');
+    const isFileDrop = e.dataTransfer.types.includes('Files');
+    if ((isLibImg || isFileDrop) && !dragType && editMode) {
+      if (e.target.closest('.ie-wrap')) {
+        document.body.classList.remove('is-dragging-item');
+        clearPreview(); _clearNear();
+        return; // 기존 ie-wrap 핸들러에 맡김
+      }
+      const zone = e.target.closest('.editor-insert-zone') || activeZone;
+      if (!zone) {
+        document.body.classList.remove('is-dragging-item');
+        clearPreview(); _clearNear();
+        return;
+      }
+      if (zone) {
+        e.preventDefault();
+        e.stopPropagation();
+        clearPreview();
+        _clearNear();
+        document.body.classList.remove('is-dragging-item');
+        // 이미지 영역 삽입 후 src 설정
+        const newImg = insertArea(zone, 'image');
+        if (newImg) {
+          if (isLibImg) {
+            const libId = e.dataTransfer.getData('application/x-library-image');
+            if (libId && window._imageLibrary) {
+              const libItem = window._imageLibrary.getImage(libId);
+              if (libItem) {
+                const ieWrap = newImg.closest('.ie-wrap');
+                if (ieWrap) { ieWrap.classList.remove('empty-img'); ieWrap.querySelector('.empty-ph')?.remove(); }
+                newImg.src = libItem.ftpUrl || libItem.dataUrl;
+                newImg.style.width = '100%'; newImg.style.height = 'auto'; newImg.style.display = 'block';
+                showToast('이미지가 삽입되었습니다.');
+              }
+            }
+          } else if (isFileDrop) {
+            const file = e.dataTransfer.files?.[0];
+            if (file && file.type.startsWith('image/')) {
+              const reader = new FileReader();
+              reader.onload = evt => {
+                const ieWrap = newImg.closest('.ie-wrap');
+                if (ieWrap) { ieWrap.classList.remove('empty-img'); ieWrap.querySelector('.empty-ph')?.remove(); }
+                newImg.src = evt.target.result;
+                newImg.style.width = '100%'; newImg.style.height = 'auto'; newImg.style.display = 'block';
+                showToast('이미지가 삽입되었습니다.');
+              };
+              reader.readAsDataURL(file);
+            }
+          }
+        }
+        return;
+      }
+    }
+
     const type = dragType || e.dataTransfer.getData('text/plain');
     if (!type) return;
     e.preventDefault();
@@ -3753,7 +3929,7 @@ function setEditMode(on) {
     });
     // 에디터 존 제거
     wrap.querySelectorAll('.editor-insert-zone, .editor-section-zone').forEach(el => el.remove());
-    // 구분선 삭제 버튼 제거
+    // 구분선/스페이서 삭제 버튼 제거
     wrap.querySelectorAll('.divider-delete-btn').forEach(el => el.remove());
     wrap.querySelectorAll('.divider-row').forEach(el => el.classList.remove('divider-row', 'divider-hover'));
     wrap.querySelectorAll('.divider-right-td').forEach(el => el.classList.remove('divider-right-td'));
@@ -4241,10 +4417,49 @@ function deleteArea(el) {
   const inTemplate = !!el.closest('#template-wrap');
   if (inTemplate) saveTplSnapshot();
   else saveSnapshot();
+
+  const parentTbody = tr.parentNode;
   tr.remove();
+
+  // 삭제 후 인접 스페이서 정리 + 빈 섹션 제거
+  if (parentTbody && parentTbody.tagName === 'TBODY') {
+    _cleanEmptyRows(parentTbody);
+  }
+
   if (inTemplate) rebuildInsertZones(document.getElementById('template-wrap'));
   else rebuildInsertZones();
   showToast('영역이 삭제되었습니다.');
+}
+
+// tbody 내에 콘텐츠(이미지/텍스트)가 없으면 섹션 전체 제거, 스페이서만 남으면 정리
+function _cleanEmptyRows(tbody) {
+  const rows = Array.from(tbody.children).filter(r => r.tagName === 'TR');
+  // 콘텐츠가 있는 행이 하나라도 있는지 확인
+  const hasContent = rows.some(tr => {
+    if (tr.classList.contains('editor-insert-zone')) return false;
+    if (tr.classList.contains('editor-section-zone')) return false;
+    if (tr.querySelector('img')) return true;
+    if (tr.querySelector('.te-td')) return true;
+    // 텍스트 td (패딩 td 제외)
+    const tds = Array.from(tr.querySelectorAll('td'));
+    return tds.some(td => {
+      const w = td.getAttribute('width');
+      if (w) return false; // 패딩 td
+      if (td.getAttribute('colspan') && td.getAttribute('height')) return false; // 스페이서
+      if (td.style.backgroundColor) return false; // 구분선
+      const text = td.textContent.trim();
+      return text.length > 0;
+    });
+  });
+
+  if (!hasContent) {
+    // 부모 table → td → tr[data-content-section] 구조이면 섹션 전체 제거
+    const table = tbody.closest('table');
+    const sectionTr = table ? table.closest('tr[data-content-section]') : null;
+    if (sectionTr) {
+      sectionTr.remove();
+    }
+  }
 }
 
 // ── Insert Zones ──────────────────────────────────────────────
@@ -4280,16 +4495,18 @@ function _setupShoutLayoutButton() {
   const tbody = headerTable.querySelector('tbody');
   if (!tbody) return;
 
-  // 간격행(height="2") 제외한 이미지 행 찾기
-  const imgRows = Array.from(tbody.querySelectorAll('tr')).filter(tr => {
-    const td = tr.querySelector('td');
+  // 간격행(height="2") 제외한 이미지 행 찾기 (직접 자식만)
+  const imgRows = Array.from(tbody.children).filter(tr => {
+    if (tr.tagName !== 'TR') return false;
+    const td = tr.querySelector(':scope > td');
     return td && td.getAttribute('height') !== '2';
   });
   if (imgRows.length < 3) return;
 
-  // Row 2 (2번째 이미지 행)의 td 수로 현재 레이아웃 판별
+  // Row 2 (2번째 이미지 행)의 직접 자식 td 수로 현재 레이아웃 판별
   const row2 = imgRows[1];
-  const row2Tds = Array.from(row2.querySelectorAll('td')).filter(td => {
+  const row2Tds = Array.from(row2.children).filter(td => {
+    if (td.tagName !== 'TD') return false;
     const w = td.getAttribute('width');
     return w && w !== '2'; // 간격 td 제외
   });
@@ -4357,21 +4574,21 @@ function _setupShoutLayoutButton() {
 function _applyShoutHeaderLayout(table, isSplit) {
   const tbody = table.querySelector('tbody');
   // 간격행(height="2") 제외한 이미지 행 찾기
-  const imgRows = Array.from(tbody.querySelectorAll('tr')).filter(tr => {
-    const td = tr.querySelector('td');
+  const imgRows = Array.from(tbody.children).filter(tr => {
+    if (tr.tagName !== 'TR') return false;
+    const td = tr.querySelector(':scope > td');
     return td && td.getAttribute('height') !== '2';
   });
   if (imgRows.length < 3) return;
 
-  const row2 = imgRows[1];
+  const oldRow2 = imgRows[1];
 
-  // Row 2의 기존 이미지 데이터 보존
-  const imgs = Array.from(row2.querySelectorAll('img'));
+  // 기존 이미지 데이터 보존 (ie-wrap 내부까지 탐색)
+  const imgs = Array.from(oldRow2.querySelectorAll('img'));
   const imgData = imgs.map(img => ({ src: img.src || '', alt: img.alt || '' }));
 
-  // Row 2의 td 모두 제거
-  Array.from(row2.children).forEach(td => td.remove());
-
+  // 새 Row 2 생성하여 교체
+  const newRow2 = document.createElement('tr');
   const TD_STYLE = 'padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;';
 
   if (!isSplit) {
@@ -4381,13 +4598,16 @@ function _applyShoutHeaderLayout(table, isSplit) {
     td.setAttribute('colspan', '3');
     td.setAttribute('valign', 'top');
     td.style.cssText = TD_STYLE;
+    const a = document.createElement('a');
+    a.href = '#issue1';
     const img = document.createElement('img');
     img.style.cssText = 'vertical-align:top;display:block;';
     img.alt = imgData[0] ? imgData[0].alt : '';
     img.src = imgData[0] ? imgData[0].src : '';
     img.border = '0';
-    td.appendChild(img);
-    row2.appendChild(td);
+    a.appendChild(img);
+    td.appendChild(a);
+    newRow2.appendChild(td);
   } else {
     // 2분할: td(359) + td(2) + td(359)
     for (let i = 0; i < 2; i++) {
@@ -4395,20 +4615,68 @@ function _applyShoutHeaderLayout(table, isSplit) {
         const gapTd = document.createElement('td');
         gapTd.setAttribute('width', '2');
         gapTd.setAttribute('valign', 'top');
-        row2.appendChild(gapTd);
+        newRow2.appendChild(gapTd);
       }
       const td = document.createElement('td');
       td.setAttribute('width', '359');
       td.setAttribute('valign', 'top');
       td.style.cssText = TD_STYLE;
+      const a = document.createElement('a');
+      a.href = '#issue' + (i + 1);
       const img = document.createElement('img');
       img.style.cssText = 'vertical-align:top;display:block;width:100%;';
       img.alt = imgData[i] ? imgData[i].alt : '';
       img.src = imgData[i] ? imgData[i].src : '';
       img.border = '0';
-      td.appendChild(img);
-      row2.appendChild(td);
+      a.appendChild(img);
+      td.appendChild(a);
+      newRow2.appendChild(td);
     }
+  }
+
+  // 기존 Row 2를 새 Row 2로 교체
+  oldRow2.parentNode.replaceChild(newRow2, oldRow2);
+
+  // a 링크 번호 재정렬
+  _reindexShoutHeaderLinks(table);
+}
+
+// 샤우트 배너 2,3행: a 태그 없으면 추가, href를 #issue1~순서대로 재정렬
+function _reindexShoutHeaderLinks(table) {
+  const tbody = table.querySelector('tbody');
+  const imgRows = Array.from(tbody.children).filter(tr => {
+    if (tr.tagName !== 'TR') return false;
+    const td = tr.querySelector(':scope > td');
+    return td && td.getAttribute('height') !== '2';
+  });
+  if (imgRows.length < 3) return;
+
+  let idx = 1;
+  // Row 2 (imgRows[1]), Row 3 (imgRows[2]) 순서대로 처리
+  for (let r = 1; r <= 2; r++) {
+    const row = imgRows[r];
+    if (!row) continue;
+    // 직접 자식 td만 순회, 간격 td(width=2) 제외
+    Array.from(row.children).forEach(td => {
+      if (td.tagName !== 'TD') return;
+      if (td.getAttribute('width') === '2') return;
+      // ie-wrap 내부까지 img 탐색
+      const img = td.querySelector('img');
+      if (!img) return;
+      // img의 직접 부모가 a인지 확인 (ie-wrap 내부일 수 있음)
+      const directParent = img.parentNode;
+      if (directParent.tagName === 'A') {
+        directParent.href = '#issue' + idx;
+        directParent.removeAttribute('target');
+      } else {
+        // a 태그 없으면 img 바로 위에 추가
+        const a = document.createElement('a');
+        a.href = '#issue' + idx;
+        directParent.insertBefore(a, img);
+        a.appendChild(img);
+      }
+      idx++;
+    });
   }
 }
 
@@ -4820,9 +5088,8 @@ function setupSpacerEditing(container) {
     el.classList.remove('spacer-editable');
   });
 
-  root.querySelectorAll('[data-content-section]').forEach(section => {
-    const innerTbody = section.querySelector('table > tbody');
-    if (!innerTbody) return;
+  // 콘텐츠 섹션 + footer 등 모든 내부 tbody의 스페이서 편집 활성화
+  root.querySelectorAll('table > tbody').forEach(innerTbody => {
     Array.from(innerTbody.children).forEach(tr => {
       if (tr.tagName !== 'TR') return;
       if (_isSpacerRow(tr)) {
@@ -4889,6 +5156,16 @@ function closeSpacerPopover() {
 }
 
 document.getElementById('spacer-apply-btn').addEventListener('click', applySpacerHeight);
+document.getElementById('spacer-delete-btn').addEventListener('click', () => {
+  if (!_activeSpacerTr) return;
+  const inTpl = !!_activeSpacerTr.closest('#template-wrap');
+  if (inTpl) saveTplSnapshot(); else saveSnapshot();
+  _activeSpacerTr.remove();
+  closeSpacerPopover();
+  if (inTpl) rebuildInsertZones(document.getElementById('template-wrap'));
+  else rebuildInsertZones();
+  showToast('공간이 제거되었습니다.');
+});
 document.getElementById('spacer-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') { e.preventDefault(); applySpacerHeight(); }
   if (e.key === 'Escape') { e.preventDefault(); closeSpacerPopover(); }
@@ -5112,6 +5389,7 @@ function insertArea(insertZoneTr, type) {
     rebuildInsertZones();
     setupLayoutButtons();
     scrollToElement(tr);
+    return img;
   } else {
     if (hasPrevContent) {
       tbody.insertBefore(_createSpacerTr(spacerH), insertZoneTr);
@@ -5195,7 +5473,19 @@ function insertSection(sectionZoneTr) {
     '<td height="1" style="padding:0;margin:0;font-size:0;line-height:1;vertical-align:top;background-color:#adadae"></td>' +
     '<td width="' + divPad + '" height="1" style="padding:0;margin:0;font-size:0;line-height:1;"></td>';
 
-  [tr1, sp(30), tr2, sp(16), tr3, sp(50), tr4, sp(50)].forEach(r => innerTbody.appendChild(r));
+  let tr5 = null;
+  if (isShout) {
+    // 샤우트: con_btn.jpg 고정 행 + 하단 이미지 행 추가
+    const trBtn = document.createElement('tr');
+    trBtn.innerHTML = '<td width="' + pad + '"></td>' +
+      '<td style="padding:0;margin:0;font-size:0;line-height:0;vertical-align:top;text-align:center;">' +
+      '<img src="https://shout.co.kr/images/com/con_btn.jpg" alt="Continue" style="border:0;" /></td>' +
+      '<td width="' + pad + '"></td>';
+    tr5 = imgRow();
+    [sp(60), tr1, tr2, sp(10), tr3, sp(50), trBtn, sp(50), tr5, sp(30)].forEach(r => innerTbody.appendChild(r));
+  } else {
+    [tr1, sp(30), tr2, sp(16), tr3, sp(50), tr4, sp(50)].forEach(r => innerTbody.appendChild(r));
+  }
 
   innerTable.appendChild(innerTbody);
   outerTd.appendChild(innerTable);
@@ -5205,7 +5495,8 @@ function insertSection(sectionZoneTr) {
   outerTbody.insertBefore(outerTr, sectionZoneTr);
 
   // 이미지 래핑
-  [tr1, tr2].forEach(tr => {
+  const imgRows = tr5 ? [tr1, tr2, tr5] : [tr1, tr2];
+  imgRows.forEach(tr => {
     const img = tr.querySelector('img');
     wrapOneImage(img);
     markEmptyImage(img);
@@ -5325,6 +5616,79 @@ function _exportImagesAsZip(imgs, dateStr, folderName, randomName, getExtAndBlob
   });
 }
 
+// 배포/다운로드 공통 후처리: 수신거부 링크, image map, img span 래핑
+function _applyDeployPostProcess(el) {
+  // 수신거부 span → tason 링크로 감싸기
+  el.querySelectorAll('span').forEach(span => {
+    if (span.textContent.trim() === '[수신거부]' && span.parentNode.tagName !== 'A') {
+      const a = document.createElement('a');
+      a.href = 'https://mkt.tason.com/open/unsubscription.jsp?user_id=penta_shout&customer_id=${EMS_M_ID}&reject_script=K&post_id=${POST_ID}';
+      a.style.textDecoration = 'none';
+      span.parentNode.insertBefore(a, span);
+      a.appendChild(span);
+    }
+  });
+
+  // 상단 헤더 이미지에 image map 추가 (소스별 분기)
+  const firstFullImg = el.querySelector('td[colspan="3"] img');
+  if (firstFullImg && !firstFullImg.getAttribute('usemap')) {
+    if (_currentSourceName === 'shout') {
+      firstFullImg.setAttribute('usemap', '#map_top');
+      firstFullImg.setAttribute('width', '720');
+      firstFullImg.setAttribute('height', '158');
+      const mapEl = document.createElement('map');
+      mapEl.id = 'map_top';
+      mapEl.name = 'map_top';
+      mapEl.innerHTML =
+        '<area href="https://pentapost.net/" shape="rect" coords="626,0,720,94" target="_blank" alt="SHOUT">' +
+        '<area href="https://pentapost.net/" shape="rect" coords="460,125,525,143" target="_blank" alt="PENTAPOST">' +
+        '<area href="https://linktr.ee/pentabreed" shape="rect" coords="534,125,586,143" target="_blank" alt="SHOUT">' +
+        '<area href="https://www.facebook.com/pentabreed" shape="rect" coords="596,125,612,143" target="_blank" alt="FACEBOOK">' +
+        '<area href="https://www.instagram.com/pentabreed_official/?hl=ko" shape="rect" coords="626,125,642,143" target="_blank" alt="INSTAGRAM">' +
+        '<area href="https://www.youtube.com/pentabreedkorea" shape="rect" coords="653,125,673,143" target="_blank" alt="YOUTUBE">' +
+        '<area title="문의 메일 작성하기" href="mailto:shout@pentabreed.com?subject=%5Bquestions%5D" shape="rect" coords="683,125,700,143" alt="문의하기">';
+      firstFullImg.parentNode.insertBefore(mapEl, firstFullImg.nextSibling);
+    } else if (_currentSourceName !== 'bluehall') {
+      firstFullImg.setAttribute('usemap', '#top_header');
+      firstFullImg.setAttribute('width', '720');
+      firstFullImg.setAttribute('height', '240');
+      const mapEl = document.createElement('map');
+      mapEl.id = 'top_header';
+      mapEl.name = 'top_header';
+      mapEl.innerHTML =
+        '<area shape="rect" coords="480,205,537,220" href="http://www.pentabreed.com/" target="_blank" alt="PENTAPOST" />' +
+        '<area shape="rect" coords="547,205,595,220" href="http://www.shout.co.kr" target="_blank" alt="SHOUT" />' +
+        '<area shape="rect" coords="605,205,620,220" href="https://www.facebook.com/pentabreed" target="_blank" alt="FACEBOOK" />' +
+        '<area shape="rect" coords="630,205,645,220" href="https://www.instagram.com/pentabreed_official/?hl=ko" target="_blank" alt="INSTAGRAM" />' +
+        '<area shape="rect" coords="654,205,672,220" href="http://www.youtube.com/pentabreedkorea" target="_blank" alt="YOUTUBE" />' +
+        '<area shape="rect" coords="682,205,697,220" href="mailto:shout@pentabreed.com?subject=%5Bquestions%5D" title="문의 메일 작성하기" alt="문의하기" />';
+      firstFullImg.parentNode.insertBefore(mapEl, firstFullImg.nextSibling);
+    }
+  }
+
+  // 샤우트 footer에 map_footer 추가
+  if (_currentSourceName === 'shout') {
+    const footerAddrImg = el.querySelector('img[alt*="펜타포스트"]');
+    if (footerAddrImg && !footerAddrImg.getAttribute('usemap')) {
+      footerAddrImg.setAttribute('usemap', '#map_footer');
+      const mapFooter = document.createElement('map');
+      mapFooter.id = 'map_footer';
+      mapFooter.name = 'map_footer';
+      mapFooter.innerHTML = '<area href="https://pentapost.net/" shape="rect" coords="164,96,301,110" target="_blank" alt="pentabreed">';
+      footerAddrImg.parentNode.insertBefore(mapFooter, footerAddrImg.nextSibling);
+    }
+  }
+
+  // img를 span으로 감싸기
+  el.querySelectorAll('img').forEach(img => {
+    if (img.parentNode.tagName === 'SPAN') return;
+    const span = document.createElement('span');
+    span.style.display = 'inline-block';
+    img.parentNode.insertBefore(span, img);
+    span.appendChild(img);
+  });
+}
+
 function _buildExportHTML() {
   const clone = document.getElementById('newsletter-wrap').cloneNode(true);
 
@@ -5336,6 +5700,7 @@ function _buildExportHTML() {
   clone.querySelectorAll('.te-editing').forEach(el => el.classList.remove('te-editing'));
   clone.querySelectorAll('.layout-toggle-btn').forEach(el => el.remove());
   clone.querySelectorAll('.editor-insert-zone').forEach(el => el.remove());
+  _fixShoutIssueAnchors(clone);
   clone.querySelectorAll('[data-content-section]').forEach(el => el.removeAttribute('data-content-section'));
   clone.querySelectorAll('.editor-section-zone').forEach(el => el.remove());
   clone.querySelectorAll('.divider-delete-btn, .empty-ph').forEach(el => el.remove());
@@ -5387,6 +5752,9 @@ function _buildExportHTML() {
   // 빈 class 속성 제거
   clone.querySelectorAll('[class=""]').forEach(el => el.removeAttribute('class'));
 
+  // 배포 환경과 동일한 후처리
+  _applyDeployPostProcess(clone);
+
   const issueId = _getIssueIdentifier();
   const typeUpper = _TYPE_UPPERS[_currentSourceName] || 'PENTAPRISM';
   const issueSuffix = !issueId.empty ? ' ' + issueId.display : '';
@@ -5407,7 +5775,7 @@ function _buildExportHTML() {
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=720" />
     <link rel="icon" type="image/png" href="/favicon.png">
-    <title>${titleText}</title>
+    <title>${(_ogData.title || ogTitle).replace(/</g, '&lt;').replace(/>/g, '&gt;')}</title>
     <!-- Facebook 노출정보 -->
     <meta property="og:title" content="${(_ogData.title || ogTitle).replace(/"/g, '&quot;')}" />
     <meta property="og:description" content="${(_ogData.description || '').replace(/"/g, '&quot;')}" />
@@ -5450,7 +5818,38 @@ function copyHTML() {
   });
 }
 
-const _FTP_API = 'https://c4126c2bc228d2.lhr.life';
+const _FTP_API = 'https://b08b6998a7baab.lhr.life';
+
+// ── 서버 상태 체크: 서버 미실행 시 접근 차단 ──
+(async function _checkServerHealth() {
+  function showBlockOverlay() {
+    const overlay = document.createElement('div');
+    overlay.id = 'server-offline-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px)';
+    overlay.innerHTML = `
+      <div style="background:#fff;border-radius:16px;padding:48px 40px;text-align:center;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,0.2)">
+        <div style="font-size:48px;margin-bottom:16px">⚠️</div>
+        <h2 style="margin:0 0 12px;font-size:20px;color:#1e293b">서버가 닫혀있습니다.</h2>
+        <p style="margin:0 0 24px;color:#64748b;font-size:14px;line-height:1.6">
+          서버 실행을 요청해주세요.
+        </p>
+        <button onclick="location.reload()" style="background:#6366f1;color:#fff;border:none;padding:10px 28px;border-radius:8px;font-size:14px;cursor:pointer">새로고침</button>
+      </div>`;
+    document.body.appendChild(overlay);
+  }
+  try {
+    const res = await fetch(_FTP_API + '/api/ftp/exists', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ remotePath: '/' }),
+      signal: AbortSignal.timeout(5000)
+    });
+    if (!res.ok) showBlockOverlay();
+  } catch {
+    showBlockOverlay();
+  }
+})();
+
 let _deployModalPath = '';
 
 function deployNewsletter() {
@@ -5557,76 +5956,8 @@ async function _deployStart() {
     htmlClone.querySelectorAll('a[href="javascript:void(0)"]').forEach(a => { if (a.dataset.href) { a.href = a.dataset.href; delete a.dataset.href; } });
     htmlClone.querySelectorAll('td a').forEach(a => { if (a.querySelector('img')) return; const td = a.closest('td'); const color = td ? td.style.color || 'inherit' : 'inherit'; a.style.color = color; a.style.textDecoration = 'none'; });
     htmlClone.querySelectorAll('[class=""]').forEach(el => el.removeAttribute('class'));
-
-    // 수신거부 span → tason 링크로 감싸기
-    htmlClone.querySelectorAll('span').forEach(span => {
-      if (span.textContent.trim() === '[수신거부]' && span.parentNode.tagName !== 'A') {
-        const a = document.createElement('a');
-        a.href = 'https://mkt.tason.com/open/unsubscription.jsp?user_id=penta_shout&customer_id=${EMS_M_ID}&reject_script=K&post_id=${POST_ID}';
-        a.style.textDecoration = 'none';
-        span.parentNode.insertBefore(a, span);
-        a.appendChild(span);
-      }
-    });
-
-    // 상단 헤더 이미지에 image map 추가 (소스별 분기)
-    const firstFullImg = htmlClone.querySelector('td[colspan="3"] img');
-    if (firstFullImg && !firstFullImg.getAttribute('usemap')) {
-      if (_currentSourceName === 'shout') {
-        firstFullImg.setAttribute('usemap', '#map_top');
-        firstFullImg.setAttribute('width', '720');
-        firstFullImg.setAttribute('height', '158');
-        const mapEl = document.createElement('map');
-        mapEl.id = 'map_top';
-        mapEl.name = 'map_top';
-        mapEl.innerHTML =
-          '<area href="https://pentapost.net/" shape="rect" coords="626,0,720,94" target="_blank" alt="SHOUT">' +
-          '<area href="https://pentapost.net/" shape="rect" coords="460,125,525,143" target="_blank" alt="PENTAPOST">' +
-          '<area href="https://linktr.ee/pentabreed" shape="rect" coords="534,125,586,143" target="_blank" alt="SHOUT">' +
-          '<area href="https://www.facebook.com/pentabreed" shape="rect" coords="596,125,612,143" target="_blank" alt="FACEBOOK">' +
-          '<area href="https://www.instagram.com/pentabreed_official/?hl=ko" shape="rect" coords="626,125,642,143" target="_blank" alt="INSTAGRAM">' +
-          '<area href="https://www.youtube.com/pentabreedkorea" shape="rect" coords="653,125,673,143" target="_blank" alt="YOUTUBE">' +
-          '<area title="문의 메일 작성하기" href="mailto:shout@pentabreed.com?subject=%5Bquestions%5D" shape="rect" coords="683,125,700,143" alt="문의하기">';
-        firstFullImg.parentNode.insertBefore(mapEl, firstFullImg.nextSibling);
-      } else {
-        firstFullImg.setAttribute('usemap', '#top_header');
-        firstFullImg.setAttribute('width', '720');
-        firstFullImg.setAttribute('height', '240');
-        const mapEl = document.createElement('map');
-        mapEl.id = 'top_header';
-        mapEl.name = 'top_header';
-        mapEl.innerHTML =
-          '<area shape="rect" coords="480,205,537,220" href="http://www.pentabreed.com/" target="_blank" alt="PENTAPOST" />' +
-          '<area shape="rect" coords="547,205,595,220" href="http://www.shout.co.kr" target="_blank" alt="SHOUT" />' +
-          '<area shape="rect" coords="605,205,620,220" href="https://www.facebook.com/pentabreed" target="_blank" alt="FACEBOOK" />' +
-          '<area shape="rect" coords="630,205,645,220" href="https://www.instagram.com/pentabreed_official/?hl=ko" target="_blank" alt="INSTAGRAM" />' +
-          '<area shape="rect" coords="654,205,672,220" href="http://www.youtube.com/pentabreedkorea" target="_blank" alt="YOUTUBE" />' +
-          '<area shape="rect" coords="682,205,697,220" href="mailto:shout@pentabreed.com?subject=%5Bquestions%5D" title="문의 메일 작성하기" alt="문의하기" />';
-        firstFullImg.parentNode.insertBefore(mapEl, firstFullImg.nextSibling);
-      }
-    }
-
-    // 샤우트 footer에 map_footer 추가
-    if (_currentSourceName === 'shout') {
-      const footerAddrImg = htmlClone.querySelector('img[alt*="펜타포스트"]');
-      if (footerAddrImg && !footerAddrImg.getAttribute('usemap')) {
-        footerAddrImg.setAttribute('usemap', '#map_footer');
-        const mapFooter = document.createElement('map');
-        mapFooter.id = 'map_footer';
-        mapFooter.name = 'map_footer';
-        mapFooter.innerHTML = '<area href="https://pentapost.net/" shape="rect" coords="164,96,301,110" target="_blank" alt="pentabreed">';
-        footerAddrImg.parentNode.insertBefore(mapFooter, footerAddrImg.nextSibling);
-      }
-    }
-
-    // img를 span으로 감싸기
-    htmlClone.querySelectorAll('img').forEach(img => {
-      if (img.parentNode.tagName === 'SPAN') return;
-      const span = document.createElement('span');
-      span.style.display = 'inline-block';
-      img.parentNode.insertBefore(span, img);
-      span.appendChild(img);
-    });
+    _fixShoutIssueAnchors(htmlClone);
+    _applyDeployPostProcess(htmlClone);
 
     // OG 이미지를 FTP에 업로드하여 절대 URL로 변환
     let ogImageUrl = '';
@@ -5654,7 +5985,7 @@ async function _deployStart() {
     const typeUpper = _TYPE_UPPERS[_currentSourceName] || 'PENTAPRISM';
     const issueSuffix = !issueId.empty ? ' ' + issueId.display : '';
     const ogTitle = '[' + typeUpper + issueSuffix + ']';
-    const head = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n<html xmlns="https://www.w3.org/1999/xhtml">\n<head>\n<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n<meta name="viewport" content="width=720" />\n<link rel="icon" type="image/png" href="/favicon.png">\n<title>${ogTitle}</title>\n<!-- Facebook 노출정보 -->\n<meta property="og:title" content="${(_ogData.title || ogTitle).replace(/"/g, '&quot;')}" />\n<meta property="og:description" content="${(_ogData.description || '').replace(/"/g, '&quot;')}" />\n<meta property="og:type" content="website" />\n<meta property="og:site_name" content="PENTABREED" />\n${ogImageUrl ? '<meta property="og:image" content="' + ogImageUrl + '" />' : '<!-- og:image: 이미지 미설정 -->'}\n<meta property="og:url" content="${(_ogData.url || 'https://shout.co.kr/').replace(/"/g, '&quot;')}" />\n<!-- // Facebook 노출정보 -->\n</head>\n<body style="padding: 0;margin: 0">`;
+    const head = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n<html xmlns="https://www.w3.org/1999/xhtml">\n<head>\n<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n<meta name="viewport" content="width=720" />\n<link rel="icon" type="image/png" href="/favicon.png">\n<title>${(_ogData.title || ogTitle).replace(/</g, '&lt;').replace(/>/g, '&gt;')}</title>\n<!-- Facebook 노출정보 -->\n<meta property="og:title" content="${(_ogData.title || ogTitle).replace(/"/g, '&quot;')}" />\n<meta property="og:description" content="${(_ogData.description || '').replace(/"/g, '&quot;')}" />\n<meta property="og:type" content="website" />\n<meta property="og:site_name" content="PENTABREED" />\n${ogImageUrl ? '<meta property="og:image" content="' + ogImageUrl + '" />' : '<!-- og:image: 이미지 미설정 -->'}\n<meta property="og:url" content="${(_ogData.url || 'https://shout.co.kr/').replace(/"/g, '&quot;')}" />\n<!-- // Facebook 노출정보 -->\n</head>\n<body style="padding: 0;margin: 0">`;
     const finalHTML = head + '\n' + htmlClone.innerHTML + '\n</body>\n</html>';
 
     // HTM 파일명 결정
@@ -6462,8 +6793,9 @@ function _initOgEditing() {
 function ogAutoFill() {
   const issueId = _getIssueIdentifier();
   const typeLabel = _TYPE_UPPERS[_currentSourceName] || 'PENTAPRISM';
+  const wrap = document.getElementById('newsletter-wrap');
 
-  // 제목·설명 생성
+  // 제목 생성
   let title = '';
   let desc = '';
   if (!issueId.empty) {
@@ -6474,12 +6806,40 @@ function ogAutoFill() {
       desc = '블루홀 미팅 ' + fullYear + '. ' + mm + '호';
     } else {
       title = '[' + typeLabel + ' ' + issueId.number + '호]';
-      // 설명: 가장 상단 첫 텍스트 입력란의 텍스트
-      const tds = document.getElementById('newsletter-wrap').querySelectorAll('.te-td');
+    }
+  }
+
+  // 설명: 본문 텍스트 영역에서 첫 번째 유효 텍스트 추출
+  if (!desc) {
+    const sections = wrap.querySelectorAll('[data-content-section]');
+    for (const section of sections) {
+      const tds = section.querySelectorAll('td');
       for (const td of tds) {
+        // 텍스트 콘텐츠가 있는 td (이미지/스페이서/패딩 td 제외)
+        if (td.querySelector('img')) continue;
+        if (td.children.length === 0 && !td.textContent.trim()) continue;
         const text = td.textContent.trim();
-        if (text) { desc = text.slice(0, 120); break; }
+        if (text && text !== '텍스트를 입력하세요.') {
+          desc = text.slice(0, 120);
+          break;
+        }
       }
+      if (desc) break;
+    }
+  }
+
+  // OG 이미지: 첫 번째 콘텐츠 이미지 자동 설정
+  if (!_ogData.imageDataUrl) {
+    const sections = wrap.querySelectorAll('[data-content-section]');
+    for (const section of sections) {
+      const imgs = section.querySelectorAll('img');
+      for (const img of imgs) {
+        if (img.src && img.src !== window.location.href && !img.src.includes('con_btn')) {
+          _resizeOgImage(img.src);
+          break;
+        }
+      }
+      break;
     }
   }
 
@@ -6525,7 +6885,23 @@ function ogClearImage() {
     if (libId && window._imageLibrary) {
       const libItem = window._imageLibrary.getImage(libId);
       if (libItem) {
-        _resizeOgImage(libItem.dataUrl);
+        const src = libItem.dataUrl;
+        if (src && src.startsWith('data:')) {
+          _resizeOgImage(src);
+        } else if (src) {
+          // http URL → img로 로드 후 canvas에서 data URL 추출
+          const tmp = new Image();
+          tmp.crossOrigin = 'anonymous';
+          tmp.onload = () => {
+            const c = document.createElement('canvas');
+            c.width = tmp.naturalWidth; c.height = tmp.naturalHeight;
+            c.getContext('2d').drawImage(tmp, 0, 0);
+            try { _resizeOgImage(c.toDataURL('image/jpeg', 0.9)); }
+            catch { _resizeOgImage(src); }
+          };
+          tmp.onerror = () => _resizeOgImage(src);
+          tmp.src = src;
+        }
         return;
       }
     }
@@ -6540,17 +6916,8 @@ function ogClearImage() {
   });
 })();
 
-async function _resizeOgImage(srcDataUrl) {
-  let dataUrl = srcDataUrl;
-  // 외부 URL인 경우 서버 프록시로 base64 변환 (CORS 우회)
-  if (dataUrl.startsWith('http')) {
-    try {
-      const resp = await fetch(_FTP_API + '/api/proxy-image?url=' + encodeURIComponent(dataUrl));
-      const pdata = await resp.json();
-      if (pdata.ok) dataUrl = pdata.dataUrl;
-      else { showToast('이미지 변환 실패'); return; }
-    } catch (e) { showToast('이미지 프록시 오류'); return; }
-  }
+function _resizeOgImage(srcDataUrl) {
+  const dataUrl = srcDataUrl;
   const img = new Image();
   img.onload = () => {
     const canvas = document.createElement('canvas');
@@ -6624,12 +6991,16 @@ function initTemplateBuilder() {
   tbody.innerHTML = '';
   _tplHistory.length = 0;
 
+  const isShout = _currentSourceName === 'shout';
+  const pad = isShout ? 65 : 24;
+  const imgStyle = isShout ? 'border:0;width:100%;display:block;' : 'border:0;max-width:100%;';
+
   // 상단 여백
   const topSpacer = document.createElement('tr');
   topSpacer.innerHTML = '<td height="30"></td>';
   tbody.appendChild(topSpacer);
 
-  // 빈 콘텐츠 섹션 1개 생성
+  // 빈 콘텐츠 섹션 1개 생성 (tr > td > table > tbody 구조)
   const outerTr = document.createElement('tr');
   outerTr.dataset.contentSection = '';
   const outerTd = document.createElement('td');
@@ -6640,10 +7011,10 @@ function initTemplateBuilder() {
   const innerTbody = document.createElement('tbody');
   // 빈 이미지 행
   const tr1 = document.createElement('tr');
-  tr1.innerHTML = '<td width="24"></td>' +
+  tr1.innerHTML = '<td width="' + pad + '"></td>' +
     '<td style="padding:0;margin:0;font-size:0;line-height:1;vertical-align:top;text-align:center;">' +
-    '<img src="" alt="" style="border:0;max-width:100%;" /></td>' +
-    '<td width="24"></td>';
+    '<img src="" alt="" style="' + imgStyle + '" /></td>' +
+    '<td width="' + pad + '"></td>';
   innerTbody.appendChild(tr1);
   innerTable.appendChild(innerTbody);
   outerTd.appendChild(innerTable);
@@ -6812,15 +7183,17 @@ function _tplInsertArea(insertZoneTr, type) {
   const tplWrap = document.getElementById('template-wrap');
   saveTplSnapshot();
   const tbody = insertZoneTr.parentNode;
+  const isShout = _currentSourceName === 'shout';
+  const pad = isShout ? 65 : 24;
   const spacerH = type === 'text' ? 16 : 30;
   const hasPrevContent = _hasPrevContent(insertZoneTr);
   if (type === 'image') {
     if (hasPrevContent) tbody.insertBefore(_createSpacerTr(spacerH), insertZoneTr);
     const tr = document.createElement('tr');
-    tr.innerHTML = '<td width="24"></td>' +
+    tr.innerHTML = '<td width="' + pad + '"></td>' +
       '<td style="padding:0;margin:0;font-size:0;line-height:1;vertical-align:top;text-align:center;">' +
-      '<img src="" alt="" style="border:0;max-width:100%;" /></td>' +
-      '<td width="24"></td>';
+      '<img src="" alt="" style="border:0;' + (isShout ? 'width:100%;display:block;' : 'max-width:100%;') + '" /></td>' +
+      '<td width="' + pad + '"></td>';
     tbody.insertBefore(tr, insertZoneTr);
     const img = tr.querySelector('img');
     wrapOneImage(img); markEmptyImage(img);
@@ -6829,11 +7202,11 @@ function _tplInsertArea(insertZoneTr, type) {
   } else {
     if (hasPrevContent) tbody.insertBefore(_createSpacerTr(spacerH), insertZoneTr);
     const tr = document.createElement('tr');
-    tr.innerHTML = '<td width="24"></td>' +
+    tr.innerHTML = '<td width="' + pad + '"></td>' +
       '<td style="font-family:\'Malgun Gothic\',sans-serif;font-size:13px;color:#555;' +
-      'line-height:18px;vertical-align:top;letter-spacing:-1px;word-break:keep-all;">' +
+      'line-height:' + (isShout ? '20px' : '18px') + ';vertical-align:top;letter-spacing:-1px;word-break:keep-all;">' +
       '</td>' +
-      '<td width="24"></td>';
+      '<td width="' + pad + '"></td>';
     tbody.insertBefore(tr, insertZoneTr);
     const td = tr.querySelectorAll('td')[1];
     wrapOneTextTD(td);
@@ -6857,12 +7230,13 @@ function _tplInsertDivider(insertZoneTr) {
   const tplWrap = document.getElementById('template-wrap');
   saveTplSnapshot();
   const tbody = insertZoneTr.parentNode;
+  const divPad = _currentSourceName === 'shout' ? 65 : 25;
   // 스페이서(50px) + 구분선 + 스페이서(50px)
   const sp1 = _createSpacerTr(50);
   const divTr = document.createElement('tr');
-  divTr.innerHTML = '<td width="25" height="1" style="padding:0;margin:0;font-size:0;line-height:1;"></td>' +
+  divTr.innerHTML = '<td width="' + divPad + '" height="1" style="padding:0;margin:0;font-size:0;line-height:1;"></td>' +
     '<td height="1" style="padding:0;margin:0;font-size:0;line-height:1;vertical-align:top;background-color:#adadae"></td>' +
-    '<td width="25" height="1" style="padding:0;margin:0;font-size:0;line-height:1;"></td>';
+    '<td width="' + divPad + '" height="1" style="padding:0;margin:0;font-size:0;line-height:1;"></td>';
   const sp2 = _createSpacerTr(50);
   tbody.insertBefore(sp1, insertZoneTr);
   tbody.insertBefore(divTr, insertZoneTr);
@@ -6875,6 +7249,8 @@ function _tplInsertDivider(insertZoneTr) {
 function _tplInsertSection(sectionZoneTr) {
   const tplWrap = document.getElementById('template-wrap');
   saveTplSnapshot();
+  const isShout = _currentSourceName === 'shout';
+  const pad = isShout ? 65 : 24;
   const outerTbody = sectionZoneTr.parentNode;
   const outerTr = document.createElement('tr');
   outerTr.dataset.contentSection = '';
@@ -6885,10 +7261,10 @@ function _tplInsertSection(sectionZoneTr) {
   innerTable.style.cssText = 'width:100%;padding:0;margin:0';
   const innerTbody = document.createElement('tbody');
   const tr1 = document.createElement('tr');
-  tr1.innerHTML = '<td width="24"></td>' +
+  tr1.innerHTML = '<td width="' + pad + '"></td>' +
     '<td style="padding:0;margin:0;font-size:0;line-height:1;vertical-align:top;text-align:center;">' +
-    '<img src="" alt="" style="border:0;max-width:100%;" /></td>' +
-    '<td width="24"></td>';
+    '<img src="" alt="" style="border:0;' + (isShout ? 'width:100%;display:block;' : 'max-width:100%;') + '" /></td>' +
+    '<td width="' + pad + '"></td>';
   innerTbody.appendChild(tr1);
   innerTable.appendChild(innerTbody);
   outerTd.appendChild(innerTable);
@@ -6920,12 +7296,28 @@ function insertDividerInNewsletter(insertZoneTr) {
 }
 
 // ── 템플릿 불러오기 (빌더에 덮어씌우기) ──
+// 샤우트 템플릿 패치: 각 섹션의 세 번째 이미지가 비어있으면 con_btn.jpg 고정
+function _patchShoutConBtn(container) {
+  if (_currentSourceName !== 'shout') return;
+  container.querySelectorAll('[data-content-section]').forEach(section => {
+    const imgs = section.querySelectorAll('img');
+    if (imgs.length >= 3) {
+      const third = imgs[2];
+      if (!third.getAttribute('src') || third.getAttribute('src') === '') {
+        third.src = 'https://shout.co.kr/images/com/con_btn.jpg';
+        third.alt = 'Continue';
+      }
+    }
+  });
+}
+
 async function _loadTemplateIntoBuilder(tplId) {
   const tpl = await getTemplateById(tplId);
   if (!tpl) { showToast('템플릿을 찾을 수 없습니다.'); return; }
   const tplWrap = document.getElementById('template-wrap');
   _tplHistory.length = 0;
   tplWrap.innerHTML = tpl.html;
+  _patchShoutConBtn(tplWrap);
   wrapImages(tplWrap);
   wrapTextTDs(tplWrap);
   rebuildInsertZones(tplWrap);
@@ -6962,6 +7354,17 @@ async function _confirmTplName() {
   if (!name) { showToast('이름을 입력해주세요.'); return; }
   if (!_pendingTplHtml) return;
   const source = _getActiveSource('tpl-source-chips');
+  // 샤우트: 양옆 패딩 td width 24 → 65 변환
+  if (source === 'shout') {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = _pendingTplHtml;
+    tmp.querySelectorAll('td[width="24"]').forEach(td => {
+      if (td.textContent.trim() === '' && td.children.length === 0) {
+        td.setAttribute('width', '65');
+      }
+    });
+    _pendingTplHtml = tmp.innerHTML;
+  }
   await addTemplate(name, _pendingTplHtml, source);
   _closeTplNameModal();
   await renderTemplateLibrary();
@@ -7084,8 +7487,19 @@ async function renderTemplateLibrary() {
   nlWrap.addEventListener('dragover', e => {
     if (!editMode || templateMode) return;
     if (!e.dataTransfer.types.includes('application/x-template-id')) return;
-    // section zone만 허용 (insert zone은 섹션 내부이므로 차단)
-    const zone = e.target.closest('.editor-section-zone');
+    // section zone 또는 footer 앞 스페이서 위에서도 드롭 허용
+    let zone = e.target.closest('.editor-section-zone');
+    if (!zone) {
+      // 스페이서 행 위에서 드래그 시 가장 가까운 이전 section zone 찾기
+      const tr = e.target.closest('tr');
+      if (tr && !tr.dataset.contentSection && !tr.querySelector('.ie-wrap') && !tr.querySelector('.te-td')) {
+        let prev = tr.previousElementSibling;
+        while (prev) {
+          if (prev.classList && prev.classList.contains('editor-section-zone')) { zone = prev; break; }
+          prev = prev.previousElementSibling;
+        }
+      }
+    }
     if (!zone && !_tplDropActiveZone) return;
     e.preventDefault();
     e.dataTransfer.dropEffect = 'copy';
@@ -7106,8 +7520,18 @@ async function renderTemplateLibrary() {
     const tpl = await getTemplateById(tplId);
     if (!tpl) { showToast('템플릿을 찾을 수 없습니다.'); return; }
 
-    // section zone만 허용
-    const zone = e.target.closest('.editor-section-zone') || _tplDropActiveZone;
+    // section zone 또는 스페이서 위 드롭 시 가장 가까운 section zone 찾기
+    let zone = e.target.closest('.editor-section-zone') || _tplDropActiveZone;
+    if (!zone) {
+      const tr = e.target.closest('tr');
+      if (tr) {
+        let prev = tr.previousElementSibling;
+        while (prev) {
+          if (prev.classList && prev.classList.contains('editor-section-zone')) { zone = prev; break; }
+          prev = prev.previousElementSibling;
+        }
+      }
+    }
     _clearTplDropPreview();
     if (!zone) { showToast('섹션 사이에만 템플릿을 추가할 수 있습니다.'); return; }
 
@@ -7120,6 +7544,7 @@ async function renderTemplateLibrary() {
     // 템플릿 HTML 파싱 → data-content-section 행 추출
     const tmp = document.createElement('div');
     tmp.innerHTML = tpl.html;
+    _patchShoutConBtn(tmp);
     const sectionRows = tmp.querySelectorAll('tr[data-content-section]');
 
     if (sectionRows.length > 0) {

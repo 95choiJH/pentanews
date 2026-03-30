@@ -63,18 +63,23 @@ CREATE TABLE IF NOT EXISTS image_items (
 -- ============================================================
 
 ALTER TABLE history ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "anon_all" ON history;
 CREATE POLICY "anon_all" ON history FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE templates ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "anon_all" ON templates;
 CREATE POLICY "anon_all" ON templates FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE drafts ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "anon_all" ON drafts;
 CREATE POLICY "anon_all" ON drafts FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE image_folders ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "anon_all" ON image_folders;
 CREATE POLICY "anon_all" ON image_folders FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE image_items ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "anon_all" ON image_items;
 CREATE POLICY "anon_all" ON image_items FOR ALL USING (true) WITH CHECK (true);
 
 -- ============================================================
@@ -87,8 +92,11 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('images', 'images', true)
 ON CONFLICT (id) DO NOTHING;
 
+DROP POLICY IF EXISTS "anon_upload" ON storage.objects;
 CREATE POLICY "anon_upload" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'images');
+DROP POLICY IF EXISTS "anon_read" ON storage.objects;
 CREATE POLICY "anon_read" ON storage.objects FOR SELECT USING (bucket_id = 'images');
+DROP POLICY IF EXISTS "anon_delete" ON storage.objects;
 CREATE POLICY "anon_delete" ON storage.objects FOR DELETE USING (bucket_id = 'images');
 
 -- ============================================================

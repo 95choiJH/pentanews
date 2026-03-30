@@ -104,12 +104,18 @@ app.get('/api/ftp/status', async (req, res) => {
 // 이미지 업로드
 app.post('/api/ftp/upload', async (req, res) => {
   const { remotePath, files } = req.body;
+  console.log(`[upload] remotePath=${remotePath}, files=${files ? files.length : 0}, bridge=${isBridgeConnected()}`);
+  if (files && files.length > 0) {
+    console.log(`[upload] file[0]: name=${files[0].name}, dataUrl length=${files[0].dataUrl ? files[0].dataUrl.length : 'N/A'}`);
+  }
   if (!remotePath || !Array.isArray(files) || files.length === 0) {
     return res.status(400).json({ ok: false, message: '업로드할 파일이 없습니다.' });
   }
   try {
     if (isBridgeConnected()) {
+      console.log('[upload] bridge로 전송 중...');
       const result = await sendToBridge('upload', { remotePath, files });
+      console.log('[upload] bridge 결과:', JSON.stringify(result).slice(0, 200));
       return res.json(result);
     }
     const client = new ftp.Client(30000);
@@ -270,6 +276,52 @@ app.post('/api/ftp/delete', async (req, res) => {
   } catch (e) {
     console.error('FTP 삭제 실패:', e.message);
     res.status(500).json({ ok: false, message: e.message });
+  }
+});
+
+// ─── Image Proxy (CORS 우회) ─────────────────────────────
+app.get('/api/proxy-image', async (req, res) => {
+  const url = req.query.url;
+  if (!url) return res.status(400).json({ ok: false, message: 'url 파라미터가 필요합니다.' });
+
+  try {
+    const parsed = new URL(url);
+    const proto = parsed.protocol === 'https:' ? require('https') : require('http');
+
+    const fetchImage = (targetUrl, redirectCount = 0) => {
+      if (redirectCount > 5) {
+        return res.status(400).json({ ok: false, message: '리다이렉트 횟수 초과' });
+      }
+      const p = new URL(targetUrl);
+      const mod = p.protocol === 'https:' ? require('https') : require('http');
+      mod.get(targetUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (response) => {
+        if ([301, 302, 303, 307, 308].includes(response.statusCode) && response.headers.location) {
+          const next = new URL(response.headers.location, targetUrl).href;
+          return fetchImage(next, redirectCount + 1);
+        }
+        if (response.statusCode !== 200) {
+          return res.status(502).json({ ok: false, message: `원본 서버 응답: ${response.statusCode}` });
+        }
+        const contentType = response.headers['content-type'] || 'image/jpeg';
+        const chunks = [];
+        response.on('data', chunk => chunks.push(chunk));
+        response.on('end', () => {
+          const buffer = Buffer.concat(chunks);
+          const base64 = buffer.toString('base64');
+          const dataUrl = `data:${contentType};base64,${base64}`;
+          res.json({ ok: true, dataUrl });
+        });
+        response.on('error', () => {
+          res.status(502).json({ ok: false, message: '이미지 다운로드 실패' });
+        });
+      }).on('error', (e) => {
+        res.status(502).json({ ok: false, message: e.message });
+      });
+    };
+
+    fetchImage(url);
+  } catch (e) {
+    res.status(400).json({ ok: false, message: '잘못된 URL: ' + e.message });
   }
 });
 
